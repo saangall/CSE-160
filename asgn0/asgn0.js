@@ -69,6 +69,22 @@ function handleDrawEvent(){
     console.log(v3.elements[0]), console.log(v3.elements[1]);
     console.log(v4.elements[0]), console.log(v4.elements[1]);
   }
+
+  else if(op == 'magnitude'){
+    let mag = v1.magnitude();
+    let mag2 = v2.magnitude();
+
+    console.log(mag), console.log(mag2);
+  }
+
+  else if(op == 'normalize'){
+    let v3 = v1.normalize();
+    let v4 = v2.normalize();
+    drawVector(v3, 'green');
+    drawVector(v4, 'green');
+    console.log(v3.elements[0]), console.log(v3.elements[1]);
+    console.log(v4.elements[0]), console.log(v4.elements[1]);
+  }
 }
 
 function drawVector(v, color){
