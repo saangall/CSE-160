@@ -13,4 +13,10 @@ function main() {
   // Draw a blue rectangle
   ctx.fillStyle = 'rgba(0, 0, 0, 1.0)'; // Set color to blue
   ctx.fillRect(0, 0, canvas.width, canvas.height);        // Fill a rectangle with the color
+  let v1 = new Vector3(2.5,2.5,0);
+}
+
+function handleDrawEvent(){
+  let v1 = document.getElementById('vector1x').value;
+  console.log(v1);
 }
