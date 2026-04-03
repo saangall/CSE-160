@@ -29,6 +29,46 @@ function handleDrawEvent(){
   let v2 = new Vector3([v2x, v2y, 0]);
   console.log("Sup");
   drawVector(v2, 'blue');
+  
+  let op = document.getElementById('operation').value;
+
+  if(op == 'add'){
+    let v3 = v1.add(v2);
+    drawVector(v3, 'green');
+    console.log(v3.elements[0]), console.log(v3.elements[1]);
+  }
+
+  else if(op == 'sub'){
+    let v3 = v1.sub(v2);
+    drawVector(v3, 'green');
+    console.log(v3.elements[0]), console.log(v3.elements[1]);
+  }
+
+  else if(op == 'mul'){
+    let scalar = document.getElementById('scalar').value;
+    if(scalar == null){
+      scalar = 1;
+    }
+    let v3 = v1.mul(scalar);
+    let v4 = v2.mul(scalar);
+    drawVector(v3, 'green');
+    drawVector(v4, 'green');
+    console.log(v3.elements[0]), console.log(v3.elements[1]);
+    console.log(v4.elements[0]), console.log(v4.elements[1]);
+  }
+
+  else if(op == 'div'){
+    let scalar = document.getElementById('scalar').value;
+    if(scalar == null){
+      scalar = 1;
+    }
+    let v3 = v1.div(scalar);
+    let v4 = v2.div(scalar);
+    drawVector(v3, 'green');
+    drawVector(v4, 'green');
+    console.log(v3.elements[0]), console.log(v3.elements[1]);
+    console.log(v4.elements[0]), console.log(v4.elements[1]);
+  }
 }
 
 function drawVector(v, color){
