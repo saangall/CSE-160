@@ -122,7 +122,10 @@ class Vector3 {
     static cross(other1, other2) {
         // Insert your code here.
         // This function should create and return a new vector.
-        let v3 = new Vector3(); // Modify this line to calculate cross product between other1 and other2.
+        let element1= (other1.elements[1] * other2.elements[2]) - (other1.elements[2] * other2.elements[1]);
+        let element2= (other1.elements[2] * other2.elements[0]) - (other1.elements[0] * other2.elements[2]);
+        let element3= (other1.elements[0] * other2.elements[1]) - (other1.elements[1] * other2.elements[0]);
+        let v3 = new Vector3([element1, element2, element3]); // Modify this line to calculate cross product between other1 and other2.
 
         // Don't delete the return statement.
         return v3;
@@ -165,6 +168,13 @@ class Vector3 {
       value = Math.min(1, Math.max(-1, value));
       let angle = Math.acos(value);
       return angle * (180 / Math.PI);
+    }
+
+    static areaTriangle(v1, v2){
+      let cross = Vector3.cross(v1, v2);
+      let magcro = cross.magnitude();
+      magcro /= 2;
+      return magcro;
     }
 }
 

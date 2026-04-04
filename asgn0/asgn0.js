@@ -90,6 +90,11 @@ function handleDrawEvent(){
     let angle = Vector3.angleBetween(v1, v2);
     console.log(angle);
   }
+
+  else if(op == 'area'){
+    let area = Vector3.areaTriangle(v1, v2);
+    console.log(area);
+  }
 }
 
 function drawVector(v, color){
