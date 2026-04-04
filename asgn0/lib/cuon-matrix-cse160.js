@@ -105,7 +105,11 @@ class Vector3 {
       */
     static dot(other1, other2) {
         // Insert your code here.
-        let d = 0; // Modify this line to calculate this vector's magnitude.
+        let a1 = other1.elements[0] * other2.elements[0];
+        let a2 = other1.elements[1] * other2.elements[1];
+        let a3 = other1.elements[2] * other2.elements[2];
+        let d = a1 + a2 + a3; 
+        console.log(d);
 
         // Don't delete the return statement.
         return d;
@@ -151,6 +155,17 @@ class Vector3 {
         // Don't delete the return statement.
         return this;
     };
+
+    static angleBetween(v1, v2){
+
+      let dot = Vector3.dot(v1, v2);
+      let mag1 = v1.magnitude();
+      let mag2 = v2.magnitude();
+      let value = dot/(mag1*mag2)
+      value = Math.min(1, Math.max(-1, value));
+      let angle = Math.acos(value);
+      return angle * (180 / Math.PI);
+    }
 }
 
 class Vector4 {

@@ -85,6 +85,11 @@ function handleDrawEvent(){
     console.log(v3.elements[0]), console.log(v3.elements[1]);
     console.log(v4.elements[0]), console.log(v4.elements[1]);
   }
+
+  else if(op == 'angleBetween'){
+    let angle = Vector3.angleBetween(v1, v2);
+    console.log(angle);
+  }
 }
 
 function drawVector(v, color){
