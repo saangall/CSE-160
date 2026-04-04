@@ -21,13 +21,11 @@ function handleDrawEvent(){
   let v1y = document.getElementById('vector1y').value;
   let v1 = new Vector3([v1x, v1y, 0]);
   //let v1 = new Vector3([2.5, 2.5, 0]);
-  console.log("Yooooo");
   drawVector(v1, 'red');
 
   let v2x = document.getElementById('vector2x').value;
   let v2y = document.getElementById('vector2y').value;
   let v2 = new Vector3([v2x, v2y, 0]);
-  console.log("Sup");
   drawVector(v2, 'blue');
   
   let op = document.getElementById('operation').value;
@@ -35,13 +33,11 @@ function handleDrawEvent(){
   if(op == 'add'){
     let v3 = v1.add(v2);
     drawVector(v3, 'green');
-    console.log(v3.elements[0]), console.log(v3.elements[1]);
   }
 
   else if(op == 'sub'){
     let v3 = v1.sub(v2);
     drawVector(v3, 'green');
-    console.log(v3.elements[0]), console.log(v3.elements[1]);
   }
 
   else if(op == 'mul'){
@@ -53,8 +49,6 @@ function handleDrawEvent(){
     let v4 = v2.mul(scalar);
     drawVector(v3, 'green');
     drawVector(v4, 'green');
-    console.log(v3.elements[0]), console.log(v3.elements[1]);
-    console.log(v4.elements[0]), console.log(v4.elements[1]);
   }
 
   else if(op == 'div'){
@@ -66,8 +60,6 @@ function handleDrawEvent(){
     let v4 = v2.div(scalar);
     drawVector(v3, 'green');
     drawVector(v4, 'green');
-    console.log(v3.elements[0]), console.log(v3.elements[1]);
-    console.log(v4.elements[0]), console.log(v4.elements[1]);
   }
 
   else if(op == 'magnitude'){
@@ -82,8 +74,6 @@ function handleDrawEvent(){
     let v4 = v2.normalize();
     drawVector(v3, 'green');
     drawVector(v4, 'green');
-    console.log(v3.elements[0]), console.log(v3.elements[1]);
-    console.log(v4.elements[0]), console.log(v4.elements[1]);
   }
 
   else if(op == 'angleBetween'){

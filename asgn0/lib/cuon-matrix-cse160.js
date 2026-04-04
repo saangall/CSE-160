@@ -109,7 +109,7 @@ class Vector3 {
         let a2 = other1.elements[1] * other2.elements[1];
         let a3 = other1.elements[2] * other2.elements[2];
         let d = a1 + a2 + a3; 
-        console.log(d);
+        
 
         // Don't delete the return statement.
         return d;
