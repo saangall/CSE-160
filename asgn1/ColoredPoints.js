@@ -52,12 +52,23 @@ function connectVariablesToGLSL(){
     return;
   }
 }
+let g_selectedColor = [1.0, 1.0, 1.0, 1.0];
+function addFunctionForHtmlUI(){
+  document.getElementById('red').onclick = function() {g_selectedColor = [1.0, 0.0, 0.0, 1.0];};
+  document.getElementById('green').onclick = function() {g_selectedColor = [0.0, 1.0, 0.0, 1.0];};
+
+  document.getElementById('redSlide').addEventListener('mouseup', function() {g_selectedColor[0] = this.value/100;});
+  document.getElementById('greenSlide').addEventListener('mouseup', function() {g_selectedColor[1] = this.value/100;});
+  document.getElementById('blueSlide').addEventListener('mouseup', function() {g_selectedColor[2] = this.value/100;});
+}
 
 function main() {
   // Retrieve <canvas> element
   setupWebGL();
 
   connectVariablesToGLSL();
+
+  addFunctionForHtmlUI();
 
   // Register function (event handler) to be called on a mouse press
   canvas.onmousedown = click;
@@ -77,14 +88,15 @@ function click(ev) {
 
   // Store the coordinates to g_points array
   g_points.push([x, y]);
+  g_colors.push([g_selectedColor[0], g_selectedColor[1], g_selectedColor[2], g_selectedColor[3]]);
   // Store the coordinates to g_points array
-  if (x >= 0.0 && y >= 0.0) {      // First quadrant
+  /*if (x >= 0.0 && y >= 0.0) {      // First quadrant
     g_colors.push([1.0, 0.0, 0.0, 1.0]);  // Red
   } else if (x < 0.0 && y < 0.0) { // Third quadrant
     g_colors.push([0.0, 1.0, 0.0, 1.0]);  // Green
   } else {                         // Others
     g_colors.push([1.0, 1.0, 1.0, 1.0]);  // White
-  }
+  }*/
   renderAllShapes();
 }
 
