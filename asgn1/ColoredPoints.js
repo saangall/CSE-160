@@ -60,7 +60,7 @@ function main() {
   connectVariablesToGLSL();
 
   // Register function (event handler) to be called on a mouse press
-  canvas.onmousedown = function(ev){ click(ev, gl, canvas, a_Position, u_FragColor) };
+  canvas.onmousedown = click;
 
   // Specify the color for clearing <canvas>
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -71,13 +71,9 @@ function main() {
 
 var g_points = [];  // The array for the position of a mouse press
 var g_colors = [];  // The array to store the color of a point
-function click(ev, gl, canvas, a_Position, u_FragColor) {
-  var x = ev.clientX; // x coordinate of a mouse pointer
-  var y = ev.clientY; // y coordinate of a mouse pointer
-  var rect = ev.target.getBoundingClientRect();
+function click(ev) {
 
-  x = ((x - rect.left) - canvas.width/2)/(canvas.width/2);
-  y = (canvas.height/2 - (y - rect.top))/(canvas.height/2);
+  let [x,y] = convertCoordinatesEventToGL(ev);
 
   // Store the coordinates to g_points array
   g_points.push([x, y]);
@@ -89,8 +85,21 @@ function click(ev, gl, canvas, a_Position, u_FragColor) {
   } else {                         // Others
     g_colors.push([1.0, 1.0, 1.0, 1.0]);  // White
   }
+  renderAllShapes();
+}
 
-  // Clear <canvas>
+function convertCoordinatesEventToGL(ev){
+  var x = ev.clientX; // x coordinate of a mouse pointer
+  var y = ev.clientY; // y coordinate of a mouse pointer
+  var rect = ev.target.getBoundingClientRect();
+
+  x = ((x - rect.left) - canvas.width/2)/(canvas.width/2);
+  y = (canvas.height/2 - (y - rect.top))/(canvas.height/2);
+
+  return([x,y]);
+}
+
+function renderAllShapes(){
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   var len = g_points.length;
@@ -106,3 +115,4 @@ function click(ev, gl, canvas, a_Position, u_FragColor) {
     gl.drawArrays(gl.POINTS, 0, 1);
   }
 }
+
