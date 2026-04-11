@@ -11,14 +11,15 @@ class Circle{
     var xy = this.position;
     var rgba = this.color;
     var s = this.size;
+    var seg = this.segments;
 
     // Pass the color of a point to u_FragColor variable
     gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
 
     
     // Draw
-    var d = this.size/200.0;
-    let angleStep=360/this.segments;
+    var d = s/200.0;
+    let angleStep=360/seg;
     for(var angle = 0; angle<360; angle=angle+angleStep){
         let centerPt = [xy[0], xy[1]];
         let angle1 = angle;
