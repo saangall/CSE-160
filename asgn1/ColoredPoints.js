@@ -64,6 +64,7 @@ function connectVariablesToGLSL(){
 
 const POINT = 0;
 const TRIANGLE = 1;
+const CIRCLE = 2;
 
 let g_selectedColor = [1.0, 1.0, 1.0, 1.0];
 let g_selectSize = 10.0;
@@ -72,7 +73,8 @@ function addFunctionForHtmlUI(){
   /*document.getElementById('red').onclick = function() {g_selectedColor = [1.0, 0.0, 0.0, 1.0];};
   document.getElementById('green').onclick = function() {g_selectedColor = [0.0, 1.0, 0.0, 1.0];};*/
   document.getElementById('pointButton').onclick = function() {g_selectedType = POINT;};
-   document.getElementById('triangleButton').onclick = function() {g_selectedType = TRIANGLE;};
+  document.getElementById('triangleButton').onclick = function() {g_selectedType = TRIANGLE;};
+  document.getElementById('circleButton').onclick = function () {g_selectedType = CIRCLE;};
 
   document.getElementById('redSlide').addEventListener('mouseup', function() {g_selectedColor[0] = this.value/100;});
   document.getElementById('greenSlide').addEventListener('mouseup', function() {g_selectedColor[1] = this.value/100;});
@@ -122,7 +124,9 @@ function click(ev) {
   if(g_selectedType == POINT){
     point = new Point();
   }
-
+  else if(g_selectedType == CIRCLE){
+    point = new Circle();
+  }
   else{
     point = new Triangle();
   }
