@@ -70,12 +70,27 @@ let g_selectedColor = [1.0, 1.0, 1.0, 1.0];
 let g_selectSize = 10.0;
 let g_selectSegment = 10;
 let g_selectedType =POINT;
+let snap = document.getElementById('snapButton');
+let g_snap = false;
+let g_erase = false;
 function addFunctionForHtmlUI(){
   /*document.getElementById('red').onclick = function() {g_selectedColor = [1.0, 0.0, 0.0, 1.0];};
   document.getElementById('green').onclick = function() {g_selectedColor = [0.0, 1.0, 0.0, 1.0];};*/
-  document.getElementById('pointButton').onclick = function() {g_selectedType = POINT;};
-  document.getElementById('triangleButton').onclick = function() {g_selectedType = TRIANGLE;};
-  document.getElementById('circleButton').onclick = function () {g_selectedType = CIRCLE;};
+  document.getElementById('pointButton').onclick = function() {g_selectedType = POINT; g_erase = false;};
+  document.getElementById('triangleButton').onclick = function() {g_selectedType = TRIANGLE; g_erase = false;};
+  document.getElementById('circleButton').onclick = function () {g_selectedType = CIRCLE; g_erase = false;};
+  document.getElementById('snapButton').onclick = function() {
+    if(g_snap == false){
+      snap.style.backgroundColor = "green";
+      g_snap = true;
+    }
+    else{
+      snap.style.backgroundColor = "red";
+      g_snap = false;
+    }
+  };
+
+  document.getElementById('eraseButton').onclick = function () {g_erase = true;};
 
   document.getElementById('redSlide').addEventListener('mouseup', function() {g_selectedColor[0] = this.value/100;});
   document.getElementById('greenSlide').addEventListener('mouseup', function() {g_selectedColor[1] = this.value/100;});
@@ -85,11 +100,9 @@ function addFunctionForHtmlUI(){
   document.getElementById('sizeSlide').addEventListener('mouseup', function() {g_selectSize = this.value;});
   document.getElementById('segmentSlide').addEventListener('mouseup', function() {g_selectSegment = this.value;});
 
-  document.getElementById('kirbyButton').onclick = function() {drawKirby();};
+  document.getElementById('kirbyButton').onclick = function() {drawKirby(); g_erase = false;};
 }
 
-let prevx;
-let prevy;
 
 function main() {
   // Retrieve <canvas> element
@@ -124,11 +137,30 @@ function clearCanvas(){
   renderAllShapes();
 }
 
+const threshold = 0.043;
+
 function click(ev) {
 
-  let [x,y] = convertCoordinatesEventToGL(ev);
-  console.log("GL coords:", x, y); 
+  let [x,y] = convertCoordinatesEventToGL(ev); 
+  
+  if(g_erase == true){
+    for(let i = g_shapeList.length-1; i>=0; i--){
+      let shape = g_shapeList[i]
+      let dx = shape.position[0] - x;
+      let dy = shape.position[1] - y;
+
+      let dis = Math.sqrt(dx*dx + dy*dy);
+
+      if(dis<=threshold){
+        g_shapeList.splice(i,1);
+      }
+    }
+    
+  }
+  else{
+  
   let point;
+  console.log(x, y);
 
   if(g_selectedType == POINT){
     point = new Point();
@@ -139,12 +171,11 @@ function click(ev) {
   else{
     point = new Triangle();
   }
-
-  if(prevx != null && prevy != null){
-    let dx = x-prevx;
-    let dy = y-prevy;
+  if(g_snap == true){
+    x = Math.round(x*100)/100;
+    y = Math.round(y*100)/100;
   }
-
+  console.log(x, y);
   point.position = [x,y];
   point.color = g_selectedColor.slice();
   point.size = g_selectSize;
@@ -152,9 +183,7 @@ function click(ev) {
     point.segments = g_selectSegment;
   }
   g_shapeList.push(point);
-
-  prevx = x;
-  prevy = y;
+  }
 
   // Store the coordinates to g_points array
   /*g_points.push([x, y]);

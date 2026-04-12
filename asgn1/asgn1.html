@@ -23,6 +23,10 @@
     <button type="button" id="circleButton">Circle</button>
 
     <br><br>
+    <button type="button" style=" background-color: red; color: white" id="snapButton">Snap</button>
+    <button type="button" id="eraseButton">Erase</button>
+
+    <br><br>
     Red <input type="range" min='0' max='100' value='100' class='slider' id="redSlide">
     <br><br>
     Green <input type="range" min='0' max='100' value='100' class='slider' id="greenSlide">
@@ -34,6 +38,11 @@
     
     <br><br>
     <button type="button" id="kirbyButton">Kirby</button>
+
+    <br><br>
+    Added a snap button where pressed, snaps the shapes to the nearest two decimal point number. 
+    <p></p>
+    I also added an eraser button so you can erase shapes from the canvas. (You can't erase shapes when Kirby is drawn)
 
     <script src="lib/webgl-utils.js"></script>
     <script src="lib/webgl-debug.js"></script>
