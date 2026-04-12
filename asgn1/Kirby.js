@@ -1,4 +1,18 @@
 function drawKirby(){
+    let footr1 = new Triangle_Improved();
+    footr1.coordinate1 = [0.25, -0.29];
+    footr1.coordinate2 = [0.32, -0.42];
+    footr1.coordinate3 = [0.12, -0.35]
+    footr1.color = [1.0,0.0,0.0,1.0];
+    g_shapeList.push(footr1);
+
+    let footr2 = new Triangle_Improved();
+    footr2.coordinate1 = [0.22, -0.46];
+    footr2.coordinate2 = [0.32, -0.42];
+    footr2.coordinate3 = [0.12, -0.35]
+    footr2.color = [1.0,0.0,0.0,1.0];
+    g_shapeList.push(footr2);
+
     let body = new Circle();
     body.position = [0.0,0.0];
     body.color = [1.0,0.75,0.79,1.0];
@@ -364,6 +378,68 @@ function drawKirby(){
     g18.color = [1.0,0.41,0.38,1.0];
     g_shapeList.push(g18);
 
+    let arm1 = new Triangle_Improved();
+    arm1.coordinate1 = [0.23, 0.1];
+    arm1.coordinate2 = [0.4, 0.10];
+    arm1.coordinate3 = [0.23, 0.4]
+    arm1.color = [1.0,0.75,0.79,1.0];
+    g_shapeList.push(arm1);
+
+    let arm2 = new Triangle_Improved();
+    arm2.coordinate1 = [0.4, 0.4];
+    arm2.coordinate2 = [0.4, 0.10];
+    arm2.coordinate3 = [0.23, 0.4]
+    arm2.color = [1.0,0.75,0.79,1.0];
+    g_shapeList.push(arm2);
+
+    let arm2_5 = new Triangle_Improved();
+    arm2_5.coordinate1 = [0.39, 0.08];
+    arm2_5.coordinate2 = [0.4, 0.10];
+    arm2_5.coordinate3 = [0.38, 0.1]
+    arm2_5.color = [1.0,0.75,0.79,1.0];
+    g_shapeList.push(arm2_5);
+
+    let footl1 = new Triangle_Improved();
+    footl1.coordinate1 = [-0.27, -0.14];
+    footl1.coordinate2 = [-0.41, -0.27];
+    footl1.coordinate3 = [-0.2, -0.44]
+    footl1.color = [1.0,0.0,0.0,1.0];
+    g_shapeList.push(footl1);
+
+    let footl2 = new Triangle_Improved();
+    footl2.coordinate1 = [-0.27, -0.14];
+    footl2.coordinate2 = [-0.09, -0.29];
+    footl2.coordinate3 = [-0.2, -0.44]
+    footl2.color = [1.0,0.0,0.0,1.0];
+    g_shapeList.push(footl2);
+
+    let footl3 = new Triangle_Improved();
+    footl3.coordinate1 = [-0.41, -0.27];
+    footl3.coordinate2 = [-0.32, -0.2];
+    footl3.coordinate3 = [-0.42, -0.2];
+    footl3.color = [1.0,0.0,0.0,1.0];
+    g_shapeList.push(footl3);
+
+    let footl4 = new Triangle_Improved();
+    footl4.coordinate1 = [-0.38, -0.15];
+    footl4.coordinate2 = [-0.32, -0.2];
+    footl4.coordinate3 = [-0.42, -0.2];
+    footl4.color = [1.0,0.0,0.0,1.0];
+    g_shapeList.push(footl4);
+
+    let footl5 = new Triangle_Improved();
+    footl5.coordinate1 = [-0.38, -0.15];
+    footl5.coordinate2 = [-0.32, -0.2];
+    footl5.coordinate3 = [-0.33, -0.14];
+    footl5.color = [1.0,0.0,0.0,1.0];
+    g_shapeList.push(footl5);
+
+    let footl6 = new Triangle_Improved();
+    footl6.coordinate1 = [-0.27, -0.14];
+    footl6.coordinate2 = [-0.32, -0.2];
+    footl6.coordinate3 = [-0.33, -0.14];
+    footl6.color = [1.0,0.0,0.0,1.0];
+    g_shapeList.push(footl6);
 
     renderAllShapes();
 }
