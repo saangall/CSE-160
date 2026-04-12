@@ -84,6 +84,8 @@ function addFunctionForHtmlUI(){
 
   document.getElementById('sizeSlide').addEventListener('mouseup', function() {g_selectSize = this.value;});
   document.getElementById('segmentSlide').addEventListener('mouseup', function() {g_selectSegment = this.value;});
+
+  document.getElementById('kirbyButton').onclick = function() {drawKirby();};
 }
 
 function main() {
@@ -120,7 +122,7 @@ function clearCanvas(){
 function click(ev) {
 
   let [x,y] = convertCoordinatesEventToGL(ev);
-
+  console.log("GL coords:", x, y); 
   let point;
 
   if(g_selectedType == POINT){
