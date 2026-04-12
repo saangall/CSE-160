@@ -174,6 +174,196 @@ function drawKirby(){
     s7.color = [1.0,0.41,0.38,1.0];
     g_shapeList.push(s7);
 
+    let s8 = new Triangle_Improved();
+    s8.coordinate1 = [-0.23, 0.02];
+    s8.coordinate2 = [-0.20, 0.02];
+    s8.coordinate3 = [-0.23, 0.00]
+    s8.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(s8);
+
+    let s9 = new Triangle_Improved();
+    s9.coordinate1 = [-0.20, 0.00];
+    s9.coordinate2 = [-0.20, 0.02];
+    s9.coordinate3 = [-0.23, 0.00]
+    s9.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(s9);
+
+    let s10 = new Triangle_Improved();
+    s10.coordinate1 = [-0.20, 0.00];
+    s10.coordinate2 = [-0.20, 0.02];
+    s10.coordinate3 = [-0.17, 0.00]
+    s10.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(s10);
+
+    let s11 = new Triangle_Improved();
+    s11.coordinate1 = [-0.20, -0.02];
+    s11.coordinate2 = [-0.20, 0.00];
+    s11.coordinate3 = [-0.17, -0.02]
+    s11.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(s11);
+
+    let s12 = new Triangle_Improved();
+    s12.coordinate1 = [-0.17, -0.00];
+    s12.coordinate2 = [-0.20, 0.00];
+    s12.coordinate3 = [-0.17, -0.02]
+    s12.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(s12);
+
+    let s13 = new Triangle_Improved();
+    s13.coordinate1 = [-0.17, -0.02];
+    s13.coordinate2 = [-0.20, -0.02];
+    s13.coordinate3 = [-0.20, -0.04]
+    s13.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(s13);
+
+    let s14 = new Triangle_Improved();
+    s14.coordinate1 = [-0.20, -0.02];
+    s14.coordinate2 = [-0.23, -0.02];
+    s14.coordinate3 = [-0.23, -0.04]
+    s14.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(s14);
+
+    let s15 = new Triangle_Improved();
+    s15.coordinate1 = [-0.20, -0.02];
+    s15.coordinate2 = [-0.20, -0.04];
+    s15.coordinate3 = [-0.23, -0.04]
+    s15.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(s15);
+
+    let s17 = new Triangle_Improved();
+    s17.coordinate1 = [-0.23, -0.02];
+    s17.coordinate2 = [-0.23, -0.04];
+    s17.coordinate3 = [-0.26, -0.04]
+    s17.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(s17);
+
+
+    let g1 = new Triangle_Improved();
+    g1.coordinate1 = [0.26, 0.04];
+    g1.coordinate2 = [0.23, 0.06];
+    g1.coordinate3 = [0.23, 0.04]
+    g1.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(g1);
+
+    let g2 = new Triangle_Improved();
+    g2.coordinate1 = [0.23, 0.04];
+    g2.coordinate2 = [0.2, 0.06];
+    g2.coordinate3 = [0.2, 0.04]
+    g2.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(g2);
+    
+    let g3 = new Triangle_Improved();
+    g3.coordinate1 = [0.23, 0.04];
+    g3.coordinate2 = [0.23, 0.06];
+    g3.coordinate3 = [0.2, 0.06]
+    g3.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(g3);
+
+    let g4 = new Triangle_Improved();
+    g4.coordinate1 = [0.2, 0.04];
+    g4.coordinate2 = [0.2, 0.06];
+    g4.coordinate3 = [0.17, 0.04]
+    g4.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(g4);
+    
+    let g5 = new Triangle_Improved();
+    g5.coordinate1 = [0.17, 0.02];
+    g5.coordinate2 = [0.17, 0.04];
+    g5.coordinate3 = [0.20, 0.02]
+    g5.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(g5);
+
+    let g6 = new Triangle_Improved();
+    g6.coordinate1 = [0.17, 0.04];
+    g6.coordinate2 = [0.2, 0.04];
+    g6.coordinate3 = [0.2, 0.02]
+    g6.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(g6);
+
+    let g7 = new Triangle_Improved();
+    g7.coordinate1 = [0.17, 0.02];
+    g7.coordinate2 = [0.2, 0.02];
+    g7.coordinate3 = [0.2, -0.04]
+    g7.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(g7);
+
+    let g8 = new Triangle_Improved();
+    g8.coordinate1 = [0.17, 0.02];
+    g8.coordinate2 = [0.17, -0.04];
+    g8.coordinate3 = [0.2, -0.04]
+    g8.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(g8);
+
+    let g9 = new Triangle_Improved();
+    g9.coordinate1 = [0.23, 0.02];
+    g9.coordinate2 = [0.21, 0.02];
+    g9.coordinate3 = [0.23, 0.00]
+    g9.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(g9);
+
+    let g10 = new Triangle_Improved();
+    g10.coordinate1 = [0.21, 0.00];
+    g10.coordinate2 = [0.21, 0.02];
+    g10.coordinate3 = [0.23, 0.00]
+    g10.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(g10);
+
+    let g11 = new Triangle_Improved();
+    g11.coordinate1 = [0.26, 0.00];
+    g11.coordinate2 = [0.23, 0.02];
+    g11.coordinate3 = [0.23, 0.00]
+    g11.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(g11);
+
+    let g12 = new Triangle_Improved();
+    g12.coordinate1 = [0.26, 0.00];
+    g12.coordinate2 = [0.23, 0.02];
+    g12.coordinate3 = [0.26, 0.02]
+    g12.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(g12);
+
+    let g13 = new Triangle_Improved();
+    g13.coordinate1 = [0.26, -0.00];
+    g13.coordinate2 = [0.23, -0.02];
+    g13.coordinate3 = [0.23, -0.00]
+    g13.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(g13);
+
+    let g14 = new Triangle_Improved();
+    g14.coordinate1 = [0.26, -0.00];
+    g14.coordinate2 = [0.23, -0.02];
+    g14.coordinate3 = [0.26, -0.02]
+    g14.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(g14);
+
+    let g15 = new Triangle_Improved();
+    g15.coordinate1 = [0.26, -0.02];
+    g15.coordinate2 = [0.23, -0.04];
+    g15.coordinate3 = [0.23, -0.02]
+    g15.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(g15);
+
+    let g16 = new Triangle_Improved();
+    g16.coordinate1 = [0.26, -0.02];
+    g16.coordinate2 = [0.23, -0.04];
+    g16.coordinate3 = [0.26, -0.04]
+    g16.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(g16);
+
+    let g17 = new Triangle_Improved();
+    g17.coordinate1 = [0.23, -0.02];
+    g17.coordinate2 = [0.2, -0.04];
+    g17.coordinate3 = [0.2, -0.02]
+    g17.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(g17);
+
+    let g18 = new Triangle_Improved();
+    g18.coordinate1 = [0.23, -0.02];
+    g18.coordinate2 = [0.2, -0.04];
+    g18.coordinate3 = [0.23, -0.04]
+    g18.color = [1.0,0.41,0.38,1.0];
+    g_shapeList.push(g18);
+
 
     renderAllShapes();
 }
