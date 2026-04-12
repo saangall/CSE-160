@@ -88,6 +88,9 @@ function addFunctionForHtmlUI(){
   document.getElementById('kirbyButton').onclick = function() {drawKirby();};
 }
 
+let prevx;
+let prevy;
+
 function main() {
   // Retrieve <canvas> element
   setupWebGL();
@@ -100,6 +103,8 @@ function main() {
   canvas.onmousedown = click;
 
   canvas.onmousemove = function (ev) {if(ev.buttons == 1) {click(ev)}};
+
+  canvas.onmouseup = function () {prevx = null; prevy = null;};
 
   // Specify the color for clearing <canvas>
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -135,6 +140,11 @@ function click(ev) {
     point = new Triangle();
   }
 
+  if(prevx != null && prevy != null){
+    let dx = x-prevx;
+    let dy = y-prevy;
+  }
+
   point.position = [x,y];
   point.color = g_selectedColor.slice();
   point.size = g_selectSize;
@@ -142,6 +152,10 @@ function click(ev) {
     point.segments = g_selectSegment;
   }
   g_shapeList.push(point);
+
+  prevx = x;
+  prevy = y;
+
   // Store the coordinates to g_points array
   /*g_points.push([x, y]);
   g_colors.push([g_selectedColor[0], g_selectedColor[1], g_selectedColor[2], g_selectedColor[3]]);
