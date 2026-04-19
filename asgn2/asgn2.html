@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Draw a point (1)</title>
+  </head>
+
+  <body onload="main()">
+    <canvas id="webgl" width="400" height="400">
+    Please use a browser that supports "canvas"
+    </canvas>
+
+    Reference Photo: <img src="Reference.png" alt="Kirby Drawing" width="300" height="400">
+
+    <br><br>
+    <button type="button" id="clear">Clear</button>
+    <!--<button type = 'button' id = 'red'>Red</button>
+    <button type = 'button' id = 'green'>Green</button>-->
+
+    <br><br>
+    <button type="button" id="pointButton">Point</button>
+    <button type="button" id="triangleButton">Triangle</button>
+    <button type="button" id="circleButton">Circle</button>
+
+    <br><br>
+    <button type="button" style=" background-color: red; color: white" id="snapButton">Snap</button>
+    <button type="button" id="eraseButton">Erase</button>
+
+    <br><br>
+    Red <input type="range" min='0' max='100' value='100' class='slider' id="redSlide">
+    <br><br>
+    Green <input type="range" min='0' max='100' value='100' class='slider' id="greenSlide">
+    <br><br>
+    Blue <input type="range" min='0' max='100' value='100' class='slider' id="blueSlide">
+    <br><br>
+    Shape Size: <input type="range" min="5.0" max="50.0" value="10.0" class="slider" id="sizeSlide">
+    Segment(Circle): <input type="range" min="10" max="40" value="10" class="slider" id="segmentSlide">
+    
+    <br><br>
+    <button type="button" id="kirbyButton">Kirby</button>
+
+    <br><br>
+    Added a snap button where pressed, snaps the shapes to the nearest two decimal point number. 
+    <p></p>
+    I also added an eraser button so you can erase shapes from the canvas. (You can't erase shapes when Kirby is drawn)
+
+    <script src="lib/webgl-utils.js"></script>
+    <script src="lib/webgl-debug.js"></script>
+    <script src="lib/cuon-utils.js"></script>
+    <script src="lib/cuon-matrix-cse160.js"></script>
+    <script src="Point.js"></script>
+    <script src="Triangle.js"></script>
+    <script src="Circle.js"></script>
+    <script src="Kirby.js"></script>
+    <script src="Cube.js"></script>
+    <script src="BlockyAnimal.js"></script>
+  </body>
+</html>
