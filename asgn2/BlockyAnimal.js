@@ -235,18 +235,102 @@ function renderAllShapes(){
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
 
   var body = new Cube();
-  body.color = [1.0,0.0,0.0,1.0];
-  body.matrix.translate(-.25,-.5,0.0);
-  body.matrix.rotate(-5,1,0,0);
-  body.matrix.scale(0.5,1,.5);
+  body.color = [0.83,0.64,0.33,1.0];
+  body.matrix.translate(-.25,-.25,0.6);
+  body.matrix.rotate(-90,1,0,0);
+  body.matrix.scale(0.45,1,.45);
   body.render();
 
+  var leftShoulder = new Cube();
+  leftShoulder.color = [0.83,0.64,0.33,1.0];
+  leftShoulder.matrix.translate(0.0,-0.35,-0.4);
+  leftShoulder.matrix.rotate(0,0,0,1);
+  leftShoulder.matrix.scale(0.23,.23,.23);
+  leftShoulder.render();
+
+  var rightShoulder = new Cube();
+  rightShoulder.color = [0.83,0.64,0.33,1.0];
+  rightShoulder.matrix.translate(-0.3,-0.35,-0.4);
+  rightShoulder.matrix.rotate(0,0,0,1);
+  rightShoulder.matrix.scale(0.23,.23,.23);
+  rightShoulder.render();
+
   var leftArm = new Cube();
-  leftArm.color = [1.0,1.0,0.0,1.0];
-  leftArm.matrix.translate(.7,0.0,0.0);
-  leftArm.matrix.rotate(45,0,0,1);
-  leftArm.matrix.scale(0.25,.7,.5);
+  leftArm.color = [0.83,0.64,0.33,1.0];
+  leftArm.matrix.translate(0.0,-0.3,-0.17);
+  leftArm.matrix.rotate(170,-90,0,1);
+  leftArm.matrix.scale(0.23,0.55,.23);
   leftArm.render();
+
+  var rightArm = new Cube();
+  rightArm.color = [0.83,0.64,0.33,1.0];
+  rightArm.matrix.translate(-0.3,-0.3,-0.17);
+  rightArm.matrix.rotate(170,-90,0,1);
+  rightArm.matrix.scale(0.23,0.55,.23);
+  rightArm.render();
+
+  var leftPaw = new Cube();
+  leftPaw.color = [0.83,0.64,0.33,1.0];
+  leftPaw.matrix.translate(0.0,-0.90,-0.55);
+  leftPaw.matrix.rotate(0,0,0,1);
+  leftPaw.matrix.scale(0.23,.1,.23);
+  leftPaw.render();
+
+  var rightPaw = new Cube();
+  rightPaw.color = [0.83,0.64,0.33,1.0];
+  rightPaw.matrix.translate(-0.3,-0.90,-0.55);
+  rightPaw.matrix.rotate(0,0,0,1);
+  rightPaw.matrix.scale(0.23,.1,.23);
+  rightPaw.render();
+
+  var leftThigh = new Cube();
+  leftThigh.color = [0.83,0.64,0.33,1.0];
+  leftThigh.matrix.translate(-0.05,-0.15,0.55);
+  leftThigh.matrix.rotate(200,-90,0,1);
+  leftThigh.matrix.scale(0.26,0.4,.26);
+  leftThigh.render();
+
+  var leftLeg = new Cube();
+  leftLeg.color = [0.83,0.64,0.33,1.0];
+  leftLeg.matrix.translate(0.0,-0.53,0.65);
+  leftLeg.matrix.rotate(170,-90,0,1);
+  leftLeg.matrix.scale(0.2,0.3,.2);
+  leftLeg.render();
+
+  var leftFoot = new Cube();
+  leftFoot.color = [0.83,0.64,0.33,1.0];
+  leftFoot.matrix.translate(0.0,-0.90,0.33);
+  leftFoot.matrix.rotate(0,0,0,1);
+  leftFoot.matrix.scale(0.23,.1,.23);
+  leftFoot.render();
+  
+  var rightThigh = new Cube();
+  rightThigh.color = [0.83,0.64,0.33,1.0];
+  rightThigh.matrix.translate(-0.25,-0.15,0.55);
+  rightThigh.matrix.rotate(200,-90,0,1);
+  rightThigh.matrix.scale(0.26,0.4,.26);
+  rightThigh.render();
+
+  var rightLeg = new Cube();
+  rightLeg.color = [0.83,0.64,0.33,1.0];
+  rightLeg.matrix.translate(-0.3,-0.53,0.65);
+  rightLeg.matrix.rotate(170,-90,0,1);
+  rightLeg.matrix.scale(0.2,0.3,.2);
+  rightLeg.render();
+
+  var rightFoot = new Cube();
+  rightFoot.color = [0.83,0.64,0.33,1.0];
+  rightFoot.matrix.translate(-0.3,-0.90,0.33);
+  rightFoot.matrix.rotate(0,0,0,1);
+  rightFoot.matrix.scale(0.23,.1,.23);
+  rightFoot.render();
+
+  var head = new Cube();
+  head.color = [0.83,0.64,0.33,1.0];
+  head.matrix.translate(-0.275,0.0,-0.6);
+  head.matrix.rotate(0,0,0,1);
+  head.matrix.scale(0.5,.5,.5);
+  head.render();
 
   //var len = g_points.length;
   /*var len = g_shapeList.length;
