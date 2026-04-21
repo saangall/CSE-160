@@ -234,11 +234,10 @@ function renderAllShapes(){
   var globalRotMat = new Matrix4().rotate(g_selectedAngle, 0, 1, 0);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
 
-  drawTriangle3D([-1.0, 0.0, 0.0,    -0.5,-1.0,0.0,   0.0,0.0,0.0]);
-
   var body = new Cube();
   body.color = [1.0,0.0,0.0,1.0];
   body.matrix.translate(-.25,-.5,0.0);
+  body.matrix.rotate(-5,1,0,0);
   body.matrix.scale(0.5,1,.5);
   body.render();
 

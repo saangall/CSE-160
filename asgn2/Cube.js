@@ -36,10 +36,29 @@ class Cube{
     }*/
     gl.uniform4f(u_FragColor, rgba[0] * 9, rgba[1]* 9, rgba[2] * 9, rgba[3]);
 
-        //Cube Front
-        drawTriangle3D([0.0,0.0,0.0,   1.0,1.0,0.0,     1.0,0.0,0.0]);
-        drawTriangle3D([0.0,0.0,0.0,   0.0,1.0,0.0,     1.0,1.0,0.0]);
+    //Cube Front
+    drawTriangle3D([0.0,0.0,0.0,   1.0,1.0,0.0,     1.0,0.0,0.0]);
+    drawTriangle3D([0.0,0.0,0.0,   0.0,1.0,0.0,     1.0,1.0,0.0]);
 
+    //Cube Top
+    drawTriangle3D([0.0,1.0,0.0,   0.0,1.0,1.0,     1.0,1.0,1.0]);
+    drawTriangle3D([0.0,1.0,0.0,   1.0,1.0,1.0,     1.0,1.0,0.0]);
+
+    //Cube Bottom
+    drawTriangle3D([0.0,0.0,0.0,   0.0,0.0,1.0,     1.0,0.0,1.0]);
+    drawTriangle3D([0.0,0.0,0.0,   1.0,0.0,1.0,     1.0,0.0,0.0]);
+
+    //Cube right
+    drawTriangle3D([1.0,0.0,0.0,   1.0,1.0,0.0,     1.0,1.0,1.0]);
+    drawTriangle3D([1.0,0.0,0.0,   1.0,1.0,1.0,     1.0,0.0,1.0]);
+
+    //Cube left
+    drawTriangle3D([0.0,0.0,0.0,   0.0,1.0,0.0,     0.0,1.0,1.0]);
+    drawTriangle3D([0.0,0.0,0.0,   0.0,1.0,1.0,     0.0,0.0,1.0]);
+
+    //Cube Back
+    drawTriangle3D([0.0,0.0,1.0,   1.0,1.0,1.0,     1.0,0.0,1.0]);
+    drawTriangle3D([0.0,0.0,1.0,   0.0,1.0,1.0,     1.0,1.0,1.0]);
   }
 
 }
