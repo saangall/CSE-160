@@ -3,8 +3,9 @@
 var VSHADER_SOURCE = `
   attribute vec4 a_Position;
   uniform mat4 u_ModelMatrix;
+  uniform mat4 u_GlobalRotateMatrix;
   void main() {
-    gl_Position = u_ModelMatrix * a_Position;
+    gl_Position = u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
   }`
 
 // Fragment shader program
@@ -21,6 +22,7 @@ let gl;
 let a_Position;
 let u_FragColor;
 let u_ModelMatrix;
+let u_GlobalRotateMatrix;
 
 function setupWebGL(){
   canvas = document.getElementById('webgl');
@@ -60,6 +62,15 @@ function connectVariablesToGLSL(){
     console.log('Failed to get the storage location of u_ModelMatrix');
     return;
   }
+
+  u_GlobalRotateMatrix = gl.getUniformLocation(gl.program, 'u_GlobalRotateMatrix');
+  if (!u_GlobalRotateMatrix) {
+    console.log('Failed to get the storage location of u_GlobalRotateMatrix');
+    return;
+  }
+
+  /*var identityM = new Matrix4();
+  gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);*/
 }
 
 const POINT = 0;
@@ -73,6 +84,7 @@ let g_selectedType =POINT;
 let snap = document.getElementById('snapButton');
 let g_snap = false;
 let g_erase = false;
+let g_selectedAngle = 0;
 function addFunctionForHtmlUI(){
   /*document.getElementById('red').onclick = function() {g_selectedColor = [1.0, 0.0, 0.0, 1.0];};
   document.getElementById('green').onclick = function() {g_selectedColor = [0.0, 1.0, 0.0, 1.0];};*/
@@ -101,6 +113,9 @@ function addFunctionForHtmlUI(){
   document.getElementById('segmentSlide').addEventListener('mouseup', function() {g_selectSegment = this.value;});
 
   document.getElementById('kirbyButton').onclick = function() {drawKirby(); g_erase = false;};
+
+  document.getElementById('angleSlide').addEventListener('mousemove', function() {g_selectedAngle = this.value; renderAllShapes();});
+
 }
 
 
@@ -215,6 +230,9 @@ function convertCoordinatesEventToGL(ev){
 
 function renderAllShapes(){
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  var globalRotMat = new Matrix4().rotate(g_selectedAngle, 0, 1, 0);
+  gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
 
   drawTriangle3D([-1.0, 0.0, 0.0,    -0.5,-1.0,0.0,   0.0,0.0,0.0]);
 

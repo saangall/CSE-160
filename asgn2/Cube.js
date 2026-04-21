@@ -34,6 +34,7 @@ class Cube{
 
         drawTriangle([xy[0], xy[1], pt1[0], pt1[1], pt2[0], pt2[1]]);
     }*/
+    gl.uniform4f(u_FragColor, rgba[0] * 9, rgba[1]* 9, rgba[2] * 9, rgba[3]);
 
         //Cube Front
         drawTriangle3D([0.0,0.0,0.0,   1.0,1.0,0.0,     1.0,0.0,0.0]);
