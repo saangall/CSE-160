@@ -78,13 +78,14 @@ const TRIANGLE = 1;
 const CIRCLE = 2;
 
 let g_selectedColor = [1.0, 1.0, 1.0, 1.0];
-let g_selectSize = 10.0;
+//let g_selectSize = 10.0;
 let g_selectSegment = 10;
 let g_selectedType =POINT;
 let snap = document.getElementById('snapButton');
 let g_snap = false;
 let g_erase = false;
 let g_selectedAngle = 0;
+let g_LeftArmRotate = 0;
 function addFunctionForHtmlUI(){
   /*document.getElementById('red').onclick = function() {g_selectedColor = [1.0, 0.0, 0.0, 1.0];};
   document.getElementById('green').onclick = function() {g_selectedColor = [0.0, 1.0, 0.0, 1.0];};*/
@@ -109,7 +110,7 @@ function addFunctionForHtmlUI(){
   document.getElementById('blueSlide').addEventListener('mouseup', function() {g_selectedColor[2] = this.value/100;});
   document.getElementById('clear').onclick = function() {g_shapeList = []; renderAllShapes();};
 
-  document.getElementById('sizeSlide').addEventListener('mouseup', function() {g_selectSize = this.value;});
+  document.getElementById('leftArmSlide').addEventListener('mousemove', function() {g_LeftArmRotate = this.value; renderAllShapes();});
   document.getElementById('segmentSlide').addEventListener('mouseup', function() {g_selectSegment = this.value;});
 
   document.getElementById('kirbyButton').onclick = function() {drawKirby(); g_erase = false;};
@@ -258,6 +259,7 @@ function renderAllShapes(){
   var leftArm = new Cube();
   leftArm.color = [0.83,0.64,0.33,1.0];
   leftArm.matrix.translate(0.0,-0.3,-0.17);
+  leftArm.matrix.rotate(g_LeftArmRotate,1,0,0);
   leftArm.matrix.rotate(170,-90,0,1);
   leftArm.matrix.scale(0.23,0.55,.23);
   leftArm.render();
