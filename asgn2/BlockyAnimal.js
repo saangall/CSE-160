@@ -273,9 +273,10 @@ function renderAllShapes(){
 
   var leftPaw = new Cube();
   leftPaw.color = [0.83,0.64,0.33,1.0];
-  leftPaw.matrix.translate(0.0,-0.90,-0.55);
+  leftPaw.matrix = leftArm.matrix;
+  leftPaw.matrix.translate(0.0,0.9,-0.0);
   leftPaw.matrix.rotate(0,0,0,1);
-  leftPaw.matrix.scale(0.23,.1,.23);
+  leftPaw.matrix.scale(0.23,0.16,0.23);
   leftPaw.render();
 
   var rightPaw = new Cube();
