@@ -91,6 +91,8 @@ let g_RightArmRotate = 0;
 let g_RightPawRotate = -3.5;
 let g_LeftThighRotate = 0;
 let g_RighThighRotate = 0;
+let g_LeftFootRotate = 0;
+let g_RightFootRotate = 0;
 function addFunctionForHtmlUI(){
   /*document.getElementById('red').onclick = function() {g_selectedColor = [1.0, 0.0, 0.0, 1.0];};
   document.getElementById('green').onclick = function() {g_selectedColor = [0.0, 1.0, 0.0, 1.0];};
@@ -121,6 +123,8 @@ function addFunctionForHtmlUI(){
   document.getElementById('rightPawSlide').addEventListener('mousemove', function() {g_RightPawRotate = this.value; renderAllShapes();});
   document.getElementById('leftThighSlide').addEventListener('mousemove', function() {g_LeftThighRotate = this.value; renderAllShapes();});
   document.getElementById('rightThighSlide').addEventListener('mousemove', function() {g_RightThighRotate = this.value; renderAllShapes();});
+  document.getElementById('leftFootSlide').addEventListener('mousemove', function() {g_LeftFootRotate = this.value; renderAllShapes();});
+  document.getElementById('rightFootSlide').addEventListener('mousemove', function() {g_RightFootRotate = this.value; renderAllShapes();});
 
   document.getElementById('kirbyButton').onclick = function() {drawKirby(); g_erase = false;};
 
@@ -299,10 +303,10 @@ function renderAllShapes(){
 
   var leftThigh = new Cube();
   leftThigh.color = [0.83,0.64,0.33,1.0];
-  leftThigh.matrix.translate(-0.05,-0.15,0.55);
+  leftThigh.matrix.translate(-0.03,-0.15,0.55);
   leftThigh.matrix.rotate(g_LeftThighRotate,1,0,0);
   leftThigh.matrix.rotate(200,-90,0,1);
-  leftThigh.matrix.scale(0.26,0.4,.26);
+  leftThigh.matrix.scale(0.26,0.402,.26);
   leftThigh.render();
 
   var leftLeg = new Cube();
@@ -310,14 +314,15 @@ function renderAllShapes(){
   leftLeg.matrix = new Matrix4(leftThigh.matrix);
   leftLeg.matrix.translate(0.2,0.95,0.2);
   leftLeg.matrix.rotate(15,1,0,0);
-  leftLeg.matrix.scale(0.7,0.7,0.7);
+  leftLeg.matrix.scale(0.7,0.85,0.7);
   leftLeg.render();
 
   var leftFoot = new Cube();
   leftFoot.color = [0.83,0.64,0.33,1.0];
-  leftFoot.matrix.translate(0.0,-0.90,0.33);
-  leftFoot.matrix.rotate(0,0,0,1);
-  leftFoot.matrix.scale(0.23,.1,.23);
+  leftFoot.matrix = new Matrix4(leftLeg.matrix);
+  leftFoot.matrix.translate(0.0,0.93,0.25);
+  leftFoot.matrix.rotate(g_LeftFootRotate,1,0,0);
+  leftFoot.matrix.scale(1.15,0.3,1.15);
   leftFoot.render();
   
   var rightThigh = new Cube();
@@ -325,21 +330,23 @@ function renderAllShapes(){
   rightThigh.matrix.translate(-0.25,-0.15,0.55);
   rightThigh.matrix.rotate(g_RightThighRotate,1,0,0);
   rightThigh.matrix.rotate(200,-90,0,1);
-  rightThigh.matrix.scale(0.26,0.4,.26);
+  rightThigh.matrix.scale(0.26,0.402,.26);
   rightThigh.render();
 
   var rightLeg = new Cube();
   rightLeg.color = [0.83,0.64,0.33,1.0];
-  rightLeg.matrix.translate(-0.3,-0.53,0.65);
-  rightLeg.matrix.rotate(170,-90,0,1);
-  rightLeg.matrix.scale(0.2,0.3,.2);
+  rightLeg.matrix = new Matrix4(rightThigh.matrix);
+  rightLeg.matrix.translate(0.2,0.95,0.2);
+  rightLeg.matrix.rotate(15,1,0,0);
+  rightLeg.matrix.scale(0.7,0.85,0.7);
   rightLeg.render();
 
   var rightFoot = new Cube();
   rightFoot.color = [0.83,0.64,0.33,1.0];
-  rightFoot.matrix.translate(-0.3,-0.90,0.33);
-  rightFoot.matrix.rotate(0,0,0,1);
-  rightFoot.matrix.scale(0.23,.1,.23);
+  rightFoot.matrix = new Matrix4(rightLeg.matrix);
+  rightFoot.matrix.translate(0.0,0.93,0.25);
+  rightFoot.matrix.rotate(g_RightFootRotate,1,0,0);
+  rightFoot.matrix.scale(1.15,0.3,1.15);
   rightFoot.render();
 
   var head = new Cube();
