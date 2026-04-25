@@ -90,9 +90,10 @@ let g_LeftPawRotate = -3.5;
 let g_RightArmRotate = 0;
 let g_RightPawRotate = -3.5;
 let g_LeftThighRotate = 0;
-let g_RighThighRotate = 0;
+let g_RightThighRotate = 0;
 let g_LeftFootRotate = 0;
 let g_RightFootRotate = 0;
+let g_Animation = false;
 function addFunctionForHtmlUI(){
   /*document.getElementById('red').onclick = function() {g_selectedColor = [1.0, 0.0, 0.0, 1.0];};
   document.getElementById('green').onclick = function() {g_selectedColor = [0.0, 1.0, 0.0, 1.0];};
@@ -116,6 +117,8 @@ function addFunctionForHtmlUI(){
   document.getElementById('greenSlide').addEventListener('mouseup', function() {g_selectedColor[1] = this.value/100;});
   document.getElementById('blueSlide').addEventListener('mouseup', function() {g_selectedColor[2] = this.value/100;});
   document.getElementById('clear').onclick = function() {g_shapeList = []; renderAllShapes();};*/
+  document.getElementById('animationOn').onclick = function() {g_Animation = true;};
+  document.getElementById('animationOff').onclick = function() {g_Animation = false;};
 
   document.getElementById('leftArmSlide').addEventListener('mousemove', function() {g_LeftArmRotate = this.value; renderAllShapes();});
   document.getElementById('leftPawSlide').addEventListener('mousemove', function() {g_LeftPawRotate = this.value; renderAllShapes();});
@@ -125,8 +128,6 @@ function addFunctionForHtmlUI(){
   document.getElementById('rightThighSlide').addEventListener('mousemove', function() {g_RightThighRotate = this.value; renderAllShapes();});
   document.getElementById('leftFootSlide').addEventListener('mousemove', function() {g_LeftFootRotate = this.value; renderAllShapes();});
   document.getElementById('rightFootSlide').addEventListener('mousemove', function() {g_RightFootRotate = this.value; renderAllShapes();});
-
-  document.getElementById('kirbyButton').onclick = function() {drawKirby(); g_erase = false;};
 
   document.getElementById('angleSlide').addEventListener('mousemove', function() {g_selectedAngle = this.value; renderAllShapes();});
 
@@ -154,7 +155,40 @@ function main() {
   // Clear <canvas>
   //gl.clear(gl.COLOR_BUFFER_BIT);
 
+  //renderAllShapes();
+  requestAnimationFrame(tick);
+}
+
+var g_startTime = performance.now()/1000;
+var g_seconds = performance.now()/1000 - g_startTime;
+
+function tick(){
+  g_seconds = performance.now()/1000 - g_startTime;
+  console.log(g_seconds);
+
+  updateAnimationAngles();
+
   renderAllShapes();
+
+  requestAnimationFrame(tick);
+}
+
+function updateAnimationAngles(){
+  if(g_Animation){
+    g_LeftArmRotate = 30*Math.sin(g_seconds);
+    g_RightArmRotate = 30*Math.sin(g_seconds + Math.PI);
+    g_LeftPawRotate = -10*Math.sin(g_seconds);
+    g_RightPawRotate = -10*Math.sin(g_seconds + Math.PI);
+    g_LeftThighRotate = 30*Math.sin(g_seconds - 0.2);
+    g_RightThighRotate = 30*Math.sin(g_seconds + Math.PI - 0.2);
+    g_LeftFootRotate = -10*Math.sin(g_seconds - 0.2);
+    g_RightFootRotate = -10*Math.sin(g_seconds + Math.PI - 0.2);
+
+
+
+
+
+  }
 }
 
 
@@ -259,6 +293,7 @@ function renderAllShapes(){
   leftShoulder.color = [0.83,0.64,0.33,1.0];
   leftShoulder.matrix.translate(0.0,-0.35,-0.4);
   leftShoulder.matrix.rotate(g_LeftArmRotate/10,1,0,0);
+  //leftShoulder.matrix.rotate(30*Math.sin(g_seconds)/10,1,0,0);
   leftShoulder.matrix.scale(0.23,.23,.23);
   leftShoulder.render();
 
@@ -266,6 +301,7 @@ function renderAllShapes(){
   rightShoulder.color = [0.83,0.64,0.33,1.0];
   rightShoulder.matrix.translate(-0.3,-0.35,-0.4);
   rightShoulder.matrix.rotate(g_RightArmRotate/10,1,0,0);
+  //rightShoulder.matrix.rotate(30*Math.sin(g_seconds + Math.PI)/10,1,0,0);
   rightShoulder.matrix.scale(0.23,.23,.23);
   rightShoulder.render();
 
@@ -273,6 +309,7 @@ function renderAllShapes(){
   leftArm.color = [0.83,0.64,0.33,1.0];
   leftArm.matrix.translate(0.0,-0.3,-0.17);
   leftArm.matrix.rotate(g_LeftArmRotate,1,0,0);
+  //leftArm.matrix.rotate(30*Math.sin(g_seconds),1,0,0);
   leftArm.matrix.rotate(170,-90,0,1);
   leftArm.matrix.scale(0.23,0.55,.23);
   leftArm.render();
@@ -281,6 +318,7 @@ function renderAllShapes(){
   rightArm.color = [0.83,0.64,0.33,1.0];
   rightArm.matrix.translate(-0.3,-0.3,-0.17);
   rightArm.matrix.rotate(g_RightArmRotate,1,0,0);
+  //rightArm.matrix.rotate(30*Math.sin(g_seconds + Math.PI),1,0,0);
   rightArm.matrix.rotate(170,-90,0,1);
   rightArm.matrix.scale(0.23,0.55,.23);
   rightArm.render();
@@ -290,6 +328,7 @@ function renderAllShapes(){
   leftPaw.matrix = new Matrix4(leftArm.matrix);
   leftPaw.matrix.translate(0.0,0.93,0.25);
   leftPaw.matrix.rotate(g_LeftPawRotate,1,0,0);
+  //leftPaw.matrix.rotate(-10*Math.sin(g_seconds),1,0,0);
   leftPaw.matrix.scale(1.0,0.22,1.0);
   leftPaw.render();
 
@@ -298,6 +337,7 @@ function renderAllShapes(){
   rightPaw.matrix = new Matrix4(rightArm.matrix);
   rightPaw.matrix.translate(0.0,0.93,0.25);
   rightPaw.matrix.rotate(g_RightPawRotate,1,0,0);
+  //rightPaw.matrix.rotate(-10*Math.sin(g_seconds + Math.PI),1,0,0);
   rightPaw.matrix.scale(1.0,0.22,1.0);
   rightPaw.render();
 
@@ -305,6 +345,7 @@ function renderAllShapes(){
   leftThigh.color = [0.83,0.64,0.33,1.0];
   leftThigh.matrix.translate(-0.03,-0.15,0.55);
   leftThigh.matrix.rotate(g_LeftThighRotate,1,0,0);
+  //leftThigh.matrix.rotate(30*Math.sin(g_seconds -0.2),1,0,0);
   leftThigh.matrix.rotate(200,-90,0,1);
   leftThigh.matrix.scale(0.26,0.402,.26);
   leftThigh.render();
@@ -322,6 +363,7 @@ function renderAllShapes(){
   leftFoot.matrix = new Matrix4(leftLeg.matrix);
   leftFoot.matrix.translate(0.0,0.93,0.25);
   leftFoot.matrix.rotate(g_LeftFootRotate,1,0,0);
+  //leftFoot.matrix.rotate(-10*Math.sin(g_seconds - 0.2),1,0,0);
   leftFoot.matrix.scale(1.15,0.3,1.15);
   leftFoot.render();
   
@@ -329,6 +371,7 @@ function renderAllShapes(){
   rightThigh.color = [0.83,0.64,0.33,1.0];
   rightThigh.matrix.translate(-0.25,-0.15,0.55);
   rightThigh.matrix.rotate(g_RightThighRotate,1,0,0);
+  //rightThigh.matrix.rotate(30*Math.sin(g_seconds + Math.PI -0.2),1,0,0);
   rightThigh.matrix.rotate(200,-90,0,1);
   rightThigh.matrix.scale(0.26,0.402,.26);
   rightThigh.render();
@@ -346,6 +389,7 @@ function renderAllShapes(){
   rightFoot.matrix = new Matrix4(rightLeg.matrix);
   rightFoot.matrix.translate(0.0,0.93,0.25);
   rightFoot.matrix.rotate(g_RightFootRotate,1,0,0);
+  //rightFoot.matrix.rotate(-10*Math.sin(g_seconds + Math.PI - 0.2),1,0,0);
   rightFoot.matrix.scale(1.15,0.3,1.15);
   rightFoot.render();
 
