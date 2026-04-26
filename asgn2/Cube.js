@@ -62,3 +62,57 @@ class Cube{
   }
 
 }
+
+class Cylinder {
+  constructor(segments = 20) {
+    this.type = 'cylinder';
+    this.color = [1, 1, 1, 1];
+    this.matrix = new Matrix4();
+    this.segments = segments;
+  }
+
+  render() {
+    gl.uniform4f(u_FragColor, ...this.color);
+    gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
+
+    let angleStep = 360 / this.segments;
+
+    for (let angle = 0; angle < 360; angle += angleStep) {
+      let rad1 = angle * Math.PI / 180;
+      let rad2 = (angle + angleStep) * Math.PI / 180;
+
+      // Circle points
+      let x1 = Math.cos(rad1);
+      let z1 = Math.sin(rad1);
+      let x2 = Math.cos(rad2);
+      let z2 = Math.sin(rad2);
+
+      // -------- TOP FACE (y = 1) --------
+      drawTriangle3D([
+        0, 1, 0,
+        x1, 1, z1,
+        x2, 1, z2
+      ]);
+
+      // -------- BOTTOM FACE (y = 0) --------
+      drawTriangle3D([
+        0, 0, 0,
+        x2, 0, z2,
+        x1, 0, z1
+      ]);
+
+      // -------- SIDE WALL (quad = 2 triangles) --------
+      drawTriangle3D([
+        x1, 0, z1,
+        x1, 1, z1,
+        x2, 1, z2
+      ]);
+
+      drawTriangle3D([
+        x1, 0, z1,
+        x2, 1, z2,
+        x2, 0, z2
+      ]);
+    }
+  }
+}
