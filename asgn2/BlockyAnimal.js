@@ -276,7 +276,9 @@ function convertCoordinatesEventToGL(ev){
   return([x,y]);
 }
 
+
 function renderAllShapes(){
+  let startTime = performance.now();
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   var globalRotMat = new Matrix4().rotate(g_selectedAngle, 0, 1, 0);
@@ -418,5 +420,12 @@ function renderAllShapes(){
     // Draw
     gl.drawArrays(gl.POINTS, 0, 1);*/
   //}
+  var duration = performance.now() - startTime;
+  sendTextToHtml("fps: " + Math.floor(1000/duration)/10, "fps");
+  
+}
+function sendTextToHtml(text, htmlID){
+  var htmlElm = document.getElementById(htmlID);
+  htmlElm.innerHTML = text;
 }
 
