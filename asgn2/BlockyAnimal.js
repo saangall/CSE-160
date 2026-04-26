@@ -94,6 +94,8 @@ let g_RightThighRotate = 0;
 let g_LeftFootRotate = 0;
 let g_RightFootRotate = 0;
 let g_Animation = false;
+let g_GlobalAngleX = 0;
+let g_GlobalAngleY = 0;
 function addFunctionForHtmlUI(){
   /*document.getElementById('red').onclick = function() {g_selectedColor = [1.0, 0.0, 0.0, 1.0];};
   document.getElementById('green').onclick = function() {g_selectedColor = [0.0, 1.0, 0.0, 1.0];};
@@ -145,7 +147,16 @@ function main() {
   // Register function (event handler) to be called on a mouse press
   canvas.onmousedown = click;
 
-  canvas.onmousemove = function (ev) {if(ev.buttons == 1) {click(ev)}};
+  canvas.onmousemove = function (ev) {
+  if (ev.buttons == 1) {  // left mouse held
+    let [x, y] = convertCoordinatesEventToGL(ev);
+
+    g_GlobalAngleY = x * 180;   // horizontal movement → Y rotation
+    g_GlobalAngleX = y * 180;   // vertical movement → X rotation
+
+    renderAllShapes();
+  }
+  };
 
   canvas.onmouseup = function () {prevx = null; prevy = null;};
 
@@ -281,7 +292,9 @@ function renderAllShapes(){
   let startTime = performance.now();
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  var globalRotMat = new Matrix4().rotate(g_selectedAngle, 0, 1, 0);
+  var globalRotMat = new Matrix4()
+  globalRotMat.rotate(g_GlobalAngleY, 0, 1, 0); // left/right
+  globalRotMat.rotate(g_GlobalAngleX, 1, 0, 0); // up/down
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
 
   var body = new Cube();
