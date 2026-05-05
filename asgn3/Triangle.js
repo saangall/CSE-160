@@ -108,11 +108,6 @@ function drawTriangle3DUV(vertices, uv) {
   // Write date into the buffer object
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.DYNAMIC_DRAW);
 
-  var a_Position = gl.getAttribLocation(gl.program, 'a_Position');
-  if (a_Position < 0) {
-    console.log('Failed to get the storage location of a_Position');
-    return -1;
-  }
   // Assign the buffer object to a_Position variable
   gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
 
@@ -130,12 +125,7 @@ function drawTriangle3DUV(vertices, uv) {
   // Write date into the buffer object
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uv), gl.DYNAMIC_DRAW);
 
-  var a_UV = gl.getAttribLocation(gl.program, 'a_UV');
-  if (a_Position < 0) {
-    console.log('Failed to get the storage location of a_UV');
-    return -1;
-  }
-  gl.vertexAttribPointer(a_UV, 3, gl.FLOAT, false, 0, 0);
+  gl.vertexAttribPointer(a_UV, 2, gl.FLOAT, false, 0, 0);
 
   // Enable the assignment to a_Position variable
   gl.enableVertexAttribArray(a_UV);

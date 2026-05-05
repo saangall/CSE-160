@@ -10,7 +10,9 @@ var VSHADER_SOURCE = `
   uniform mat4 u_ViewMatrix;
   uniform mat4 u_ProjectionMatrix;
   void main() {
-    gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
+    gl_Position = u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
+    v_UV = a_UV;
+    // /u_ProjectionMatrix * u_ViewMatrix * 
   }`
 
 // Fragment shader program
@@ -204,7 +206,6 @@ var g_seconds = performance.now()/1000 - g_startTime;
 
 function tick(){
   g_seconds = performance.now()/1000 - g_startTime;
-  console.log(g_seconds);
 
   updateAnimationAngles();
 
