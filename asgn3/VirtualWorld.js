@@ -241,6 +241,8 @@ function main() {
 
   canvas.onmouseup = function () {prevx = null; prevy = null;};
 
+  document.onkeydown = keydown;
+
   initTextures();
 
   // Specify the color for clearing <canvas>
@@ -363,6 +365,27 @@ function convertCoordinatesEventToGL(ev){
   return([x,y]);
 }
 
+function keydown(ev){
+  if(ev.keyCode == 65){
+    g_eye[0] +=0.2;
+  }
+
+  else if(ev.keyCode == 68){
+    g_eye[0] -= 0.2;
+  }
+
+  else if(ev.keyCode == 87){
+    g_eye[2] -= 0.2;
+  }
+
+  else if(ev.keyCode == 83){
+    g_eye[2] += 0.2;
+  }
+}
+
+let g_eye = [0,0,3];
+let g_at = [0,0,-100];
+let g_up = [0,1,0];
 
 function renderAllShapes(){
   var baseMatrix = new Matrix4();
@@ -374,11 +397,11 @@ function renderAllShapes(){
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   var projMat = new Matrix4();
-  projMat.setPerspective(50, 1*canvas.width/canvas.height, .1, 100);
+  projMat.setPerspective(50, canvas.width/canvas.height, .1, 100);
   gl.uniformMatrix4fv(u_ProjectionMatrix, false, projMat.elements);
 
   var viewMat = new Matrix4();
-  viewMat.setLookAt(0,0,3,   0,0,-100,  0,1,0);
+  viewMat.setLookAt(g_eye[0], g_eye[1], g_eye[2], g_at[0], g_at[1], g_at[2],  g_up[0], g_up[1], g_up[2]);
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMat.elements);
 
   var globalRotMat = new Matrix4()
