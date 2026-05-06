@@ -216,9 +216,10 @@ function addFunctionForHtmlUI(){
 
 }
 
-
+let camera= new Camera();;
 function main() {
   // Retrieve <canvas> element
+  
   setupWebGL();
 
   connectVariablesToGLSL();
@@ -367,25 +368,27 @@ function convertCoordinatesEventToGL(ev){
 
 function keydown(ev){
   if(ev.keyCode == 65){
-    g_eye[0] +=0.2;
+    camera.left();
   }
 
   else if(ev.keyCode == 68){
-    g_eye[0] -= 0.2;
+    camera.right();
   }
 
   else if(ev.keyCode == 87){
-    g_eye[2] -= 0.2;
+    console.log(g_eye);
+    camera.forward();
   }
 
   else if(ev.keyCode == 83){
-    g_eye[2] += 0.2;
+    camera.back();
   }
 }
 
-let g_eye = [0,0,3];
-let g_at = [0,0,-100];
-let g_up = [0,1,0];
+let g_eye = [camera.eye.elements[0], camera.eye.elements[1], camera.eye.elements[2]];
+let g_at = [camera.at.elements[0], camera.at.elements[1], camera.at.elements[2]];
+let g_up = [camera.up.elements[0], camera.up.elements[1], camera.up.elements[2]];
+
 
 function renderAllShapes(){
   var baseMatrix = new Matrix4();
