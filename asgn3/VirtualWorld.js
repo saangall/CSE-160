@@ -10,7 +10,7 @@ var VSHADER_SOURCE = `
   uniform mat4 u_ViewMatrix;
   uniform mat4 u_ProjectionMatrix;
   void main() {
-    gl_Position = u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
+    gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
     v_UV = a_UV;
     // /u_ProjectionMatrix * u_ViewMatrix * 
   }`
@@ -20,8 +20,21 @@ var FSHADER_SOURCE = `
   precision mediump float;
   varying vec2 v_UV;
   uniform vec4 u_FragColor;
+  uniform sampler2D u_Sampler0;
+  uniform int u_whichTexture;
   void main() {
+  if(u_whichTexture == -2){
     gl_FragColor = u_FragColor;
+    }
+  else if(u_whichTexture == -1){
+    gl_FragColor = vec4(v_UV, 1.0, 1.0);
+    }
+  else if(u_whichTexture == 0){
+    gl_FragColor = texture2D(u_Sampler0, v_UV);
+    }
+  else{
+    gl_FragColor = vec4(1,.2,.2,1);
+    }
   } `
 
 // Global Variables
@@ -34,6 +47,8 @@ let u_ModelMatrix;
 let u_ProjectionMatrix;
 let u_ViewMatrix;
 let u_GlobalRotateMatrix;
+let u_Sampler0;
+let u_whichTexture;
 
 function setupWebGL(){
   canvas = document.getElementById('webgl');
@@ -74,6 +89,9 @@ function connectVariablesToGLSL(){
     return;
   }
 
+  u_Sampler0 = gl.getUniformLocation(gl.program, 'u_Sampler0');
+  u_whichTexture = gl.getUniformLocation(gl.program, 'u_whichTexture');
+
   u_ModelMatrix = gl.getUniformLocation(gl.program, 'u_ModelMatrix');
   if (!u_ModelMatrix) {
     console.log('Failed to get the storage location of u_ModelMatrix');
@@ -100,6 +118,38 @@ function connectVariablesToGLSL(){
 
   /*var identityM = new Matrix4();
   gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);*/
+}
+
+function initTextures(){
+
+
+var image = new Image(); // Create an image object
+
+// Register the event handler to be called on loading an image
+image.onload = function(){ loadTexture(image); };
+//Tell the browser to load an image
+image.src = 'Mario.png';
+
+return true;
+}
+
+function loadTexture(image){ 
+var texture = gl.createTexture(); 
+gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
+// Enable the texture unit 0
+gl.activeTexture(gl.TEXTURE0);
+// Bind the texture object to the target
+gl.bindTexture(gl.TEXTURE_2D, texture);
+
+// Set the texture parameters
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+// Set the texture image
+gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+
+// Set the texture unit 0 to the sampler
+gl.uniform1i(u_Sampler0, 0);
+
+//gl.drawArrays(gl.TRIANGLE_STRIP, 0, n); // Draw a rectangle
 }
 
 const POINT = 0;
@@ -190,6 +240,8 @@ function main() {
   };
 
   canvas.onmouseup = function () {prevx = null; prevy = null;};
+
+  initTextures();
 
   // Specify the color for clearing <canvas>
   gl.clearColor(0.0, 0.0, 1.0, 1.0);
@@ -320,6 +372,12 @@ function renderAllShapes(){
   baseMatrix.rotate(g_pokeSpin, 0, 1, 0);
   let startTime = performance.now();
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  var projMat = new Matrix4();
+  gl.uniformMatrix4fv(u_ProjectionMatrix, false, projMat.elements);
+
+  var viewMat = new Matrix4();
+  gl.uniformMatrix4fv(u_ViewMatrix, false, viewMat.elements);
 
   var globalRotMat = new Matrix4()
   globalRotMat.rotate(g_GlobalAngleY, 0, 1, 0); // left/right

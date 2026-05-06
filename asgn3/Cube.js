@@ -6,6 +6,7 @@ class Cube{
     //this.size = 5.0;
     //this.segments = 10; 
     this.matrix = new Matrix4();
+    this.textureNum = 0;
   }
 
   render(){
@@ -13,7 +14,7 @@ class Cube{
     var rgba = this.color;
     //var s = this.size;
     //var seg = this.segments;
-
+    gl.uniform1i(u_whichTexture, this.textureNum);
     // Pass the color of a point to u_FragColor variable
     gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
 
@@ -37,28 +38,28 @@ class Cube{
     //gl.uniform4f(u_FragColor, rgba[0] * 9, rgba[1]* 9, rgba[2] * 9, rgba[3]);
 
     //Cube Front
-    drawTriangle3DUV([0.0,0.0,0.0,   1.0,1.0,0.0,     1.0,0.0,0.0], [1,0,  0,1,  1,1]);
-    drawTriangle3DUV([0.0,0.0,0.0,   0.0,1.0,0.0,     1.0,1.0,0.0], [1,0,  0,1,  1,1]);
+    drawTriangle3DUV([0.0,0.0,0.0,   1.0,1.0,0.0,     1.0,0.0,0.0], [0,0,  1,1,  1,0]);
+    drawTriangle3DUV([0.0,0.0,0.0,   0.0,1.0,0.0,     1.0,1.0,0.0], [0,0,  0,1,  1,1]);
 
     //Cube Top
-    drawTriangle3D([0.0,1.0,0.0,   0.0,1.0,1.0,     1.0,1.0,1.0]);
-    drawTriangle3D([0.0,1.0,0.0,   1.0,1.0,1.0,     1.0,1.0,0.0]);
+    drawTriangle3DUV([0.0,1.0,0.0,   0.0,1.0,1.0,     1.0,1.0,1.0], [0,0,  0,1,  1,1]);
+    drawTriangle3DUV([0.0,1.0,0.0,   1.0,1.0,1.0,     1.0,1.0,0.0], [0,0,  1,1,  1,0]);
 
     //Cube Bottom
-    drawTriangle3D([0.0,0.0,0.0,   0.0,0.0,1.0,     1.0,0.0,1.0]);
-    drawTriangle3D([0.0,0.0,0.0,   1.0,0.0,1.0,     1.0,0.0,0.0]);
+    drawTriangle3DUV([0.0,0.0,0.0,   0.0,0.0,1.0,     1.0,0.0,1.0], [0,0,  0,1,  1,1]);
+    drawTriangle3DUV([0.0,0.0,0.0,   1.0,0.0,1.0,     1.0,0.0,0.0], [0,0,  1,1,  1,0]);
 
     //Cube right
-    drawTriangle3D([1.0,0.0,0.0,   1.0,1.0,0.0,     1.0,1.0,1.0]);
-    drawTriangle3D([1.0,0.0,0.0,   1.0,1.0,1.0,     1.0,0.0,1.0]);
+    drawTriangle3DUV([1.0,0.0,0.0,   1.0,1.0,0.0,     1.0,1.0,1.0], [0,0,  1,0,  1,1]);
+    drawTriangle3DUV([1.0,0.0,0.0,   1.0,1.0,1.0,     1.0,0.0,1.0], [0,0,  1,1,  0,1]);
 
     //Cube left
-    drawTriangle3D([0.0,0.0,0.0,   0.0,1.0,0.0,     0.0,1.0,1.0]);
-    drawTriangle3D([0.0,0.0,0.0,   0.0,1.0,1.0,     0.0,0.0,1.0]);
+    drawTriangle3DUV([0.0,0.0,0.0,   0.0,1.0,0.0,     0.0,1.0,1.0], [0,0,  1,0,  1,1]);
+    drawTriangle3DUV([0.0,0.0,0.0,   0.0,1.0,1.0,     0.0,0.0,1.0], [0,0,  1,1,  0,1]);
 
     //Cube Back
-    drawTriangle3D([0.0,0.0,1.0,   1.0,1.0,1.0,     1.0,0.0,1.0]);
-    drawTriangle3D([0.0,0.0,1.0,   0.0,1.0,1.0,     1.0,1.0,1.0]);
+    drawTriangle3DUV([0.0,0.0,1.0,   1.0,1.0,1.0,     1.0,0.0,1.0], [0,0,  1,1,  1,0]);
+    drawTriangle3DUV([0.0,0.0,1.0,   0.0,1.0,1.0,     1.0,1.0,1.0], [0,0,  0,1,  1,1]);
   }
 
 }
