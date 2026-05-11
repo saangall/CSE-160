@@ -27,7 +27,7 @@ var FSHADER_SOURCE = `
     gl_FragColor = u_FragColor;
     }
   else if(u_whichTexture == -1){
-    gl_FragColor = vec4(v_UV, 1.0, 1.0);
+    gl_FragColor = vec4(v_UV, 0.0, 1.0);
     }
   else if(u_whichTexture == 0){
     gl_FragColor = texture2D(u_Sampler0, v_UV);
@@ -376,7 +376,6 @@ function keydown(ev){
   }
 
   else if(ev.keyCode == 87){
-    console.log(g_eye);
     camera.forward();
   }
 
@@ -421,6 +420,23 @@ function renderAllShapes(){
   globalRotMat.rotate(g_GlobalAngleX, 1, 0, 0); // up/down
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
 
+  var ground = new Cube();
+  ground.matrix = new Matrix4(baseMatrix)
+  ground.color = [0.83,0.64,0.33,1.0];
+  ground.matrix.translate(0,-1,0);
+  ground.matrix.scale(10,0,10);
+  ground.matrix.translate(-0.5,0,-0.5);
+  ground.textureNum = -1;
+  ground.render();
+
+  var sky = new Cube();
+  sky.matrix = new Matrix4(baseMatrix)
+  sky.color = [0.5,0.5,1.0,1.0];
+  sky.matrix.scale(50,50,50);
+  sky.matrix.translate(-0.5,-.5,-.5);
+  sky.textureNum = -2;
+  sky.render();
+  
   var body = new Cube();
   body.matrix = new Matrix4(baseMatrix)
   body.color = [0.83,0.64,0.33,1.0];
