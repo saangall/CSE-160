@@ -49,6 +49,8 @@ let u_ViewMatrix;
 let u_GlobalRotateMatrix;
 let u_Sampler0;
 let u_whichTexture;
+let g_vertexBuffer = null;
+let g_uvBuffer = null;
 
 function setupWebGL(){
   canvas = document.getElementById('webgl');
@@ -115,6 +117,9 @@ function connectVariablesToGLSL(){
     console.log('Failed to get the storage location of u_GlobalRotateMatrix');
     return;
   }
+
+  g_vertexBuffer = gl.createBuffer();
+  g_uvBuffer = gl.createBuffer();
 
   /*var identityM = new Matrix4();
   gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);*/
@@ -392,8 +397,8 @@ function keydown(ev){
 }
 
 let g_map = [
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
   [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
   [1,0,0,1,1,0,0,1,1,0,0,0,0,0,0,1],
   [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
@@ -428,8 +433,8 @@ let g_map = [
 ];
 
 function drawMap(){
-  for(x=0;x<32;x++){
-    for(y=0;y<16;y++){
+  for(x=0;x<g_map.length;x++){
+    for(y=0;y<g_map[x].length;y++){
       if(g_map[x][y]==1){
         var wall = new Cube();
         wall.color = [0.5,0.5,0.5,1.0];
