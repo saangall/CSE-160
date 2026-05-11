@@ -391,19 +391,67 @@ function keydown(ev){
   }
 }
 
-let g_eye = [camera.eye.elements[0], camera.eye.elements[1], camera.eye.elements[2]];
-let g_at = [camera.at.elements[0], camera.at.elements[1], camera.at.elements[2]];
-let g_up = [camera.up.elements[0], camera.up.elements[1], camera.up.elements[2]];
+let g_map = [
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
+  [1,0,0,1,1,0,0,1,1,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
+  [1,0,0,0,1,0,0,1,1,0,0,0,1,0,0,1],
+  [1,0,0,0,0,0,0,1,1,0,0,0,1,0,0,1],
+  [1,0,0,0,0,0,0,1,1,0,0,0,1,0,0,1],
+  [1,0,0,0,0,0,0,1,1,0,0,0,1,0,0,1],
+  [1,0,0,0,0,0,0,1,1,0,0,0,1,0,0,1],
+  [1,0,0,0,0,0,0,1,1,0,0,0,1,0,0,1],
+  [1,0,0,0,0,0,0,1,1,0,0,0,1,0,0,1],
+  [1,0,0,0,0,0,0,1,1,0,0,0,1,0,0,1],
+  [1,0,0,0,0,0,0,1,1,0,0,0,1,0,0,1],
+  [1,0,0,0,0,0,0,1,1,0,0,0,1,0,0,1],
+  [1,0,0,0,0,0,0,1,1,0,0,0,1,0,0,1],
+  [1,0,0,0,0,0,0,1,1,0,0,0,1,0,0,1],
+  [1,0,0,0,0,0,0,1,1,0,0,0,1,0,0,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  
+];
+
+function drawMap(){
+  for(x=0;x<32;x++){
+    for(y=0;y<16;y++){
+      if(g_map[x][y]==1){
+        var wall = new Cube();
+        wall.color = [0.5,0.5,0.5,1.0];
+        wall.matrix.translate(x-16,-1.0,y-16);
+        wall.render();
+      }
+    }
+  }
+}
 
 
 function renderAllShapes(){
-  var baseMatrix = new Matrix4();
+    var baseMatrix = new Matrix4();
 
 // apply poke animation
   baseMatrix.translate(0, g_pokeOffsetY, 0);
   baseMatrix.rotate(g_pokeSpin, 0, 1, 0);
   let startTime = performance.now();
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  
+  drawMap();
+
 
   var projMat = new Matrix4();
   projMat.setPerspective(50, canvas.width/canvas.height, .1, 100);
@@ -424,7 +472,7 @@ function renderAllShapes(){
   ground.matrix = new Matrix4(baseMatrix)
   ground.color = [0.83,0.64,0.33,1.0];
   ground.matrix.translate(0,-1,0);
-  ground.matrix.scale(10,0,10);
+  ground.matrix.scale(32,0,32);
   ground.matrix.translate(-0.5,0,-0.5);
   ground.textureNum = -1;
   ground.render();
