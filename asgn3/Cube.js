@@ -6,7 +6,7 @@ class Cube{
     //this.size = 5.0;
     //this.segments = 10; 
     this.matrix = new Matrix4();
-    this.textureNum = 0;
+    this.textureNum = 1;
   }
 
   render(){
@@ -14,13 +14,23 @@ class Cube{
     var rgba = this.color;
     //var s = this.size;
     //var seg = this.segments;
+        if (this.textureNum === 0) {
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, g_textures["mario"]);
+}
+else if (this.textureNum === 1) {
+  gl.activeTexture(gl.TEXTURE1);
+  gl.bindTexture(gl.TEXTURE_2D, g_textures["leaves"]);
+}
+else if (this.textureNum === 2) {
+  gl.activeTexture(gl.TEXTURE2);
+  gl.bindTexture(gl.TEXTURE_2D, g_textures["wood"]);
+}
     gl.uniform1i(u_whichTexture, this.textureNum);
     // Pass the color of a point to u_FragColor variable
     gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
 
     gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
-
-    
     // Draw
     /*var d = s/200.0;
     let angleStep=360/seg;

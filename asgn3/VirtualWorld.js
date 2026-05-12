@@ -21,16 +21,24 @@ var FSHADER_SOURCE = `
   varying vec2 v_UV;
   uniform vec4 u_FragColor;
   uniform sampler2D u_Sampler0;
+  uniform sampler2D u_Sampler1;
+  uniform sampler2D u_Sampler2;
   uniform int u_whichTexture;
   void main() {
   if(u_whichTexture == -2){
     gl_FragColor = u_FragColor;
     }
   else if(u_whichTexture == -1){
-    gl_FragColor = vec4(v_UV, 0.0, 1.0);
+    gl_FragColor = vec4(0.0, 0.4, 0.0, 1.0);
     }
   else if(u_whichTexture == 0){
     gl_FragColor = texture2D(u_Sampler0, v_UV);
+    }
+    else if(u_whichTexture == 1){
+    gl_FragColor = texture2D(u_Sampler1, v_UV);
+    }
+    else if(u_whichTexture == 2){
+    gl_FragColor = texture2D(u_Sampler2, v_UV);
     }
   else{
     gl_FragColor = vec4(1,.2,.2,1);
@@ -125,20 +133,23 @@ function connectVariablesToGLSL(){
   gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);*/
 }
 
+let g_textures = {};
+
 function initTextures(){
+  let mario = new Image();
+  mario.onload = () => loadTexture(mario, "mario");
+  mario.src = "Mario.png";
 
+  let leaves = new Image();
+  leaves.onload = () => loadTexture(leaves, "leaves");
+  leaves.src = "hedge-leaves-512x512.png";
 
-var image = new Image(); // Create an image object
-
-// Register the event handler to be called on loading an image
-image.onload = function(){ loadTexture(image); };
-//Tell the browser to load an image
-image.src = 'Mario.png';
-
-return true;
+  let wood = new Image();
+  wood.onload = () => loadTexture(wood, "wood");
+  wood.src = "tree_bark.png";
 }
 
-function loadTexture(image){ 
+function loadTexture(image, name){ 
 var texture = gl.createTexture(); 
 gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
 // Enable the texture unit 0
@@ -152,7 +163,8 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
 
 // Set the texture unit 0 to the sampler
-gl.uniform1i(u_Sampler0, 0);
+
+g_textures[name] = texture;
 
 //gl.drawArrays(gl.TRIANGLE_STRIP, 0, n); // Draw a rectangle
 }
@@ -424,10 +436,27 @@ function keydown(ev){
   else if(ev.keyCode == 69){
     camera.panRight();
   }
+  else if(ev.keyCode == 70){ // F key
+
+    let [x, z] = getBlockInFront();
+
+    if(x >= 0 && x < 32 && z >= 0 && z < 32){
+      g_map[x][z] += 1;
+    }
+  }
+  else if(ev.keyCode == 71){ // G key
+
+    let [x, z] = getBlockInFront();
+
+    if(x >= 0 && x < 32 && z >= 0 && z < 32){
+      g_map[x][z] -= 1;
+    }
+  }
 }
 
+
 let g_map = [
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
   [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
   [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -458,28 +487,79 @@ let g_map = [
   [1,0,1,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
   [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
   [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   
 ];
 
 function drawMap(){
-  for(x=0;x<g_map.length;x++){
-    for(y=0;y<g_map[x].length;y++){
-      if(g_map[x][y]==1){
+  for(let x = 0; x < g_map.length; x++){
+    for(let z = 0; z < g_map[x].length; z++){
+
+      let height = g_map[x][z];
+
+      for(let y = 0; y < height; y++){
+
         var wall = new Cube();
         wall.color = [0.5,0.5,0.5,1.0];
-        wall.matrix.translate(x-16,-1.0,y-16);
+        wall.textureNum = -2;
+
+        wall.matrix.translate(
+          x - 16,
+          y - 1,
+          z - 16
+        );
+
         wall.render();
       }
     }
   }
 }
 
+function getBlockInFront() {
+
+  // Direction camera is looking
+  let dirX = camera.at.elements[0] - camera.eye.elements[0];
+  let dirZ = camera.at.elements[2] - camera.eye.elements[2];
+
+  // Normalize direction
+  let length = Math.sqrt(dirX * dirX + dirZ * dirZ);
+
+  dirX /= length;
+  dirZ /= length;
+
+  // Point slightly in front of camera
+  let frontX = camera.eye.elements[0] + dirX * 1.5;
+  let frontZ = camera.eye.elements[2] + dirZ * 1.5;
+
+  // Convert world coords -> map indices
+  let mapX = Math.floor(frontX + 16);
+  let mapZ = Math.floor(frontZ + 16);
+
+  return [mapX, mapZ];
+}
+
 let g_yaw = 0;
 let g_pitch = 0;
 
+function drawTree(x, z) {
+  // trunk
+  let trunk = new Cube();
+  trunk.textureNum = 1;
+  trunk.matrix.translate(x, -1, z);
+  trunk.matrix.scale(0.2, 1, 0.2);
+  trunk.render();
+
+  // leaves
+  let leaves = new Cube();
+  leaves.textureNum = 2;
+  leaves.matrix.translate(x, 0.5, z);
+  leaves.matrix.scale(1, 1, 1);
+  leaves.render();
+}
+
 function renderAllShapes(){
     var baseMatrix = new Matrix4();
+
   
     
 // apply poke animation
@@ -488,6 +568,8 @@ function renderAllShapes(){
   let startTime = performance.now();
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   
+
+  drawTree(-5,5);
   drawMap();
 
 
