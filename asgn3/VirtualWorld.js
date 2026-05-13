@@ -23,6 +23,7 @@ var FSHADER_SOURCE = `
   uniform sampler2D u_Sampler0;
   uniform sampler2D u_Sampler1;
   uniform sampler2D u_Sampler2;
+  uniform sampler2D u_Sampler3;
   uniform int u_whichTexture;
   void main() {
   if(u_whichTexture == -2){
@@ -40,6 +41,9 @@ var FSHADER_SOURCE = `
     else if(u_whichTexture == 2){
     gl_FragColor = texture2D(u_Sampler2, v_UV);
     }
+    else if(u_whichTexture == 3){
+    gl_FragColor = texture2D(u_Sampler3, v_UV);
+    }
   else{
     gl_FragColor = vec4(1,.2,.2,1);
     }
@@ -56,6 +60,9 @@ let u_ProjectionMatrix;
 let u_ViewMatrix;
 let u_GlobalRotateMatrix;
 let u_Sampler0;
+let u_Sampler1;
+let u_Sampler2;
+let u_Sampler3;
 let u_whichTexture;
 let g_vertexBuffer = null;
 let g_uvBuffer = null;
@@ -100,6 +107,9 @@ function connectVariablesToGLSL(){
   }
 
   u_Sampler0 = gl.getUniformLocation(gl.program, 'u_Sampler0');
+  u_Sampler1 = gl.getUniformLocation(gl.program, 'u_Sampler1');
+  u_Sampler2 = gl.getUniformLocation(gl.program, 'u_Sampler2');
+  u_Sampler3 = gl.getUniformLocation(gl.program, 'u_Sampler3');
   u_whichTexture = gl.getUniformLocation(gl.program, 'u_whichTexture');
 
   u_ModelMatrix = gl.getUniformLocation(gl.program, 'u_ModelMatrix');
@@ -137,36 +147,61 @@ let g_textures = {};
 
 function initTextures(){
   let mario = new Image();
-  mario.onload = () => loadTexture(mario, "mario");
+  mario.onload = () => loadTexture(mario, "mario", 0);
   mario.src = "Mario.png";
 
   let leaves = new Image();
-  leaves.onload = () => loadTexture(leaves, "leaves");
+  leaves.onload = () => loadTexture(leaves, "leaves", 1);
   leaves.src = "hedge-leaves-512x512.png";
 
   let wood = new Image();
-  wood.onload = () => loadTexture(wood, "wood");
+  wood.onload = () => loadTexture(wood, "wood", 2);
   wood.src = "tree_bark.png";
+
+  let wall = new Image();
+  wall.onload = () => loadTexture(wall, "wall", 3);
+  wall.src = "stone-wall-512x512.png";
 }
 
-function loadTexture(image, name){ 
-var texture = gl.createTexture(); 
-gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
-// Enable the texture unit 0
-gl.activeTexture(gl.TEXTURE0);
-// Bind the texture object to the target
-gl.bindTexture(gl.TEXTURE_2D, texture);
+function loadTexture(image, name, unit){ 
+  let texture = gl.createTexture();
 
-// Set the texture parameters
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-// Set the texture image
-gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
 
-// Set the texture unit 0 to the sampler
+  // activate correct texture unit
+  gl.activeTexture(gl.TEXTURE0 + unit);
 
-g_textures[name] = texture;
+  // bind texture
+  gl.bindTexture(gl.TEXTURE_2D, texture);
 
-//gl.drawArrays(gl.TRIANGLE_STRIP, 0, n); // Draw a rectangle
+  // texture settings
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+
+  // upload image
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGB,
+    gl.RGB,
+    gl.UNSIGNED_BYTE,
+    image
+  );
+
+  // connect sampler to texture unit
+  if(unit == 0){
+    gl.uniform1i(u_Sampler0, 0);
+  }
+  else if(unit == 1){
+    gl.uniform1i(u_Sampler1, 1);
+  }
+  else if(unit == 2){
+    gl.uniform1i(u_Sampler2, 2);
+  }
+  else if(unit == 3){
+    gl.uniform1i(u_Sampler3, 3);
+  }
+
+  g_textures[name] = texture;
 }
 
 const POINT = 0;
@@ -452,41 +487,44 @@ function keydown(ev){
       g_map[x][z] -= 1;
     }
   }
+  if(!bgMusic){
+    initAudio();
+  }
 }
 
 
 let g_map = [
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  [1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  [1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1],
-  [1,0,0,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1],
-  [1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
-  [1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
-  [1,0,1,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
-  [1,0,0,0,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
-  [1,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
-  [1,0,1,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,2],
+  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+  [2,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+  [2,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,0,0,2,2,2,2,2,2,2,2,2,2,2],
+  [2,0,0,1,1,0,0,0,2,2,2,2,2,2,2,2,2,2,2,0,0,2,2,2,2,2,2,2,2,2,2,2],
+  [2,0,0,1,1,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2],
+  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2],
+  [2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2],
+  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2],
+  [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2],
+  [2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2],
+  [2,0,1,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2],
+  [2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2],
+  [2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2],
+  [2,0,0,0,2,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2],
+  [2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2],
+  [2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2],
+  [2,0,3,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2],
+  [2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2],
+  [2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2],
+  [2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2],
+  [2,0,1,1,1,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2],
+  [2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+  [2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
   
 ];
@@ -500,8 +538,8 @@ function drawMap(){
       for(let y = 0; y < height; y++){
 
         var wall = new Cube();
-        wall.color = [0.5,0.5,0.5,1.0];
-        wall.textureNum = -2;
+        //wall.color = [0.5,0.5,0.5,1.0];
+        wall.textureNum = 3;
 
         wall.matrix.translate(
           x - 16,
@@ -544,17 +582,292 @@ let g_pitch = 0;
 function drawTree(x, z) {
   // trunk
   let trunk = new Cube();
-  trunk.textureNum = 1;
-  trunk.matrix.translate(x, -1, z);
-  trunk.matrix.scale(0.2, 1, 0.2);
+  trunk.textureNum = 2;
+  trunk.matrix.translate(x+0.25, -1, z+0.25);
+  trunk.matrix.scale(0.5, 1.5, 0.5);
   trunk.render();
 
   // leaves
   let leaves = new Cube();
-  leaves.textureNum = 2;
+  leaves.textureNum = 1;
   leaves.matrix.translate(x, 0.5, z);
   leaves.matrix.scale(1, 1, 1);
   leaves.render();
+}
+
+function drawAnimal(x, y, z, rotationY, textureNum) {
+
+  let baseMatrix = new Matrix4();
+
+  // position
+  baseMatrix.translate(x, y, z);
+
+  // rotate which way animal faces
+  baseMatrix.rotate(rotationY, 0, 1, 0);
+
+  var body = new Cube();
+  body.matrix = new Matrix4(baseMatrix)
+  body.color = [0.83,0.64,0.33,1.0];
+  body.matrix.translate(-.25,-.25,0.6);
+  body.matrix.rotate(-90,1,0,0);
+  body.matrix.scale(0.45,1,.45);
+  body.textureNum = textureNum;
+  body.render();
+
+  /*var tail = new Cylinder(20);
+  tail.matrix = new Matrix4(baseMatrix)
+  tail.color = [0.83,0.64,0.33,1.0];
+  tail.matrix.translate(-.0,-.4,1.05);
+  tail.matrix.rotate(-45,1,0,0);
+  tail.matrix.scale(0.05,0.7,.05);
+  tail.render();*/
+
+  /*var tailEnd = new Cube();
+  tailEnd.matrix = new Matrix4(baseMatrix);
+  tailEnd.color = [0.0,0.0,0.0,1.0];
+  tailEnd.matrix.translate(-.05,-.5,1.1);
+  tailEnd.matrix.rotate(-45,1,0,0);
+  tailEnd.matrix.scale(0.1,0.1,.1);
+  tailEnd.render();*/
+
+  var leftShoulder = new Cube();
+  leftShoulder.matrix = new Matrix4(baseMatrix);
+  leftShoulder.color = [0.8,0.6,0.33,1.0];
+  leftShoulder.matrix.translate(0.0,-0.35,-0.46);
+  leftShoulder.matrix.rotate(g_LeftArmRotate/10,1,0,0);
+  //leftShoulder.matrix.rotate(30*Math.sin(g_seconds)/10,1,0,0);
+  leftShoulder.matrix.scale(0.23,.23,.23);
+  leftShoulder.textureNum = textureNum;
+  leftShoulder.render();
+
+  var rightShoulder = new Cube();
+  rightShoulder.matrix = new Matrix4(baseMatrix);
+  rightShoulder.color = [0.8,0.6,0.33,1.0];
+  rightShoulder.matrix.translate(-0.3,-0.35,-0.46);
+  rightShoulder.matrix.rotate(g_RightArmRotate/10,1,0,0);
+  //rightShoulder.matrix.rotate(30*Math.sin(g_seconds + Math.PI)/10,1,0,0);
+  rightShoulder.matrix.scale(0.23,.23,.23);
+  rightShoulder.textureNum = textureNum;
+  rightShoulder.render();
+
+  var leftArm = new Cube();
+  leftArm.matrix = new Matrix4(baseMatrix);
+  leftArm.color = [0.8,0.6,0.33,1.0];
+  leftArm.matrix.translate(0.0,-0.3,-0.17);
+  leftArm.matrix.rotate(g_LeftArmRotate,1,0,0);
+  //leftArm.matrix.rotate(30*Math.sin(g_seconds),1,0,0);
+  leftArm.matrix.rotate(170,-1,0,0);
+  var leftArmJoint = new Matrix4(leftArm.matrix);
+  leftArm.matrix.scale(0.23,0.55,.23);
+  leftArm.textureNum = textureNum;
+  leftArm.render();
+
+  var rightArm = new Cube();
+  rightArm.matrix = new Matrix4(baseMatrix);
+  rightArm.color = [0.8,0.6,0.33,1.0];
+  rightArm.matrix.translate(-0.3,-0.3,-0.17);
+  rightArm.matrix.rotate(g_RightArmRotate,1,0,0);
+  //rightArm.matrix.rotate(30*Math.sin(g_seconds + Math.PI),1,0,0);
+  rightArm.matrix.rotate(170,-1,0,0);
+  var rightArmJoint = new Matrix4(rightArm.matrix);
+  rightArm.matrix.scale(0.23,0.55,.23);
+  rightArm.textureNum = textureNum;
+  rightArm.render();
+
+  var leftPaw = new Cube();
+  leftPaw.color = [0.8,0.6,0.33,1.0];
+  leftPaw.matrix = new Matrix4(leftArmJoint);
+  leftPaw.matrix.translate(0.0,0.54,0.05);
+  leftPaw.matrix.rotate(g_LeftPawRotate,1,0,0);
+  //leftPaw.matrix.rotate(-10*Math.sin(g_seconds),1,0,0);
+  leftPaw.matrix.scale(0.23,0.12,0.23);
+  leftPaw.textureNum = textureNum;
+  leftPaw.render();
+
+  var rightPaw = new Cube();
+  rightPaw.color = [0.8,0.6,0.33,1.0];
+  rightPaw.matrix = new Matrix4(rightArmJoint);
+  rightPaw.matrix.translate(0.0,0.54,0.05);
+  rightPaw.matrix.rotate(g_RightPawRotate,1,0,0);
+  //rightPaw.matrix.rotate(-10*Math.sin(g_seconds + Math.PI),1,0,0);
+  rightPaw.matrix.scale(0.23,0.12,0.23);
+  rightPaw.textureNum = textureNum;
+  rightPaw.render();
+
+  var leftThigh = new Cube();
+  leftThigh.matrix = new Matrix4(baseMatrix);
+  leftThigh.color = [0.8,0.6,0.33,1.0];
+  leftThigh.matrix.translate(-0.03,-0.15,0.55);
+  leftThigh.matrix.rotate(g_LeftThighRotate,1,0,0);
+  //leftThigh.matrix.rotate(30*Math.sin(g_seconds -0.2),1,0,0);
+  leftThigh.matrix.rotate(200,-1,0,0);
+  var leftThighJoint = new Matrix4(leftThigh.matrix);
+  leftThigh.matrix.scale(0.26,0.402,.26);
+  leftThigh.textureNum = textureNum;
+  leftThigh.render();
+
+  var leftLeg = new Cube();
+  leftLeg.color = [0.8,0.6,0.33,1.0];
+  leftLeg.matrix = new Matrix4(leftThighJoint);
+  leftLeg.matrix.translate(0.05,0.3,-0.0);
+  leftLeg.matrix.rotate(15,1,0,0);
+  var leftLegJoint = new Matrix4(leftLeg.matrix);
+  leftLeg.matrix.scale(0.15,0.4,0.2);
+  leftLeg.textureNum = textureNum;
+  leftLeg.render();
+
+  var leftFoot = new Cube();
+  leftFoot.color = [0.8,0.6,0.33,1.0];
+  leftFoot.matrix = new Matrix4(leftLegJoint);
+  leftFoot.matrix.translate(-0.01,0.4,0.05);
+  leftFoot.matrix.rotate(g_LeftFootRotate,1,0,0);
+  //leftFoot.matrix.rotate(-10*Math.sin(g_seconds - 0.2),1,0,0);
+  leftFoot.matrix.scale(0.2,0.12,0.23);
+  leftFoot.textureNum = textureNum;
+  leftFoot.render();
+  
+  var rightThigh = new Cube();
+  rightThigh.matrix = new Matrix4(baseMatrix);
+  rightThigh.color = [0.8,0.6,0.33,1.0];
+  rightThigh.matrix.translate(-0.25,-0.15,0.55);
+  rightThigh.matrix.rotate(g_RightThighRotate,1,0,0);
+  //rightThigh.matrix.rotate(30*Math.sin(g_seconds + Math.PI -0.2),1,0,0);
+  rightThigh.matrix.rotate(200,-1,0,0);
+  var rightThighJoint = new Matrix4(rightThigh.matrix);
+  rightThigh.matrix.scale(0.26,0.402,.26);
+  rightThigh.textureNum = textureNum;
+  rightThigh.render();
+
+  var rightLeg = new Cube();
+  rightLeg.color = [0.8,0.6,0.33,1.0];
+  rightLeg.matrix = new Matrix4(rightThighJoint);
+  rightLeg.matrix.translate(0.05,0.3,-0.0);
+  rightLeg.matrix.rotate(15,1,0,0);
+  var rightLegJoint = new Matrix4(rightLeg.matrix);
+  rightLeg.matrix.scale(0.15,0.4,0.2);
+  rightLeg.textureNum = textureNum;
+  rightLeg.render();
+
+  var rightFoot = new Cube();
+  rightFoot.color = [0.8,0.6,0.33,1.0];
+  rightFoot.matrix = new Matrix4(rightLegJoint);
+  rightFoot.matrix.translate(-0.03,0.4,0.05);
+  rightFoot.matrix.rotate(g_RightFootRotate,1,0,0);
+  //rightFoot.matrix.rotate(-10*Math.sin(g_seconds + Math.PI - 0.2),1,0,0);
+  rightFoot.matrix.scale(0.2,0.12,0.23);
+  rightFoot.textureNum = textureNum;
+  rightFoot.render();
+
+  var head = new Cube();
+  head.matrix = new Matrix4(baseMatrix);
+  head.color = [0.83,0.64,0.33,1.0];
+  head.matrix.translate(-0.275,0.0,-0.6);
+  head.matrix.rotate(0,0,0,1);
+  head.matrix.scale(0.5,.5,.3);
+  head.textureNum = textureNum;
+  head.render();
+
+  var snout = new Cube();
+  snout.matrix = new Matrix4(baseMatrix);
+  snout.color = [0.83,0.64,0.33,1.0];
+  snout.matrix.translate(-0.151,0.0,-0.8);
+  snout.matrix.rotate(0,0,0,1);
+  snout.matrix.scale(0.25,.25,.25);
+  snout.textureNum = textureNum;
+  snout.render();
+
+  var nose = new Cube();
+  nose.matrix = new Matrix4(baseMatrix);
+  nose.color = [0.0,0.0,0.0,1.0];
+  nose.matrix.translate(-0.076,0.2,-0.822);
+  nose.matrix.rotate(0,0,0,1);
+  nose.matrix.scale(0.1,.05,.0);
+  nose.textureNum = textureNum;
+  nose.render();
+
+  var rightEye = new Cube();
+  rightEye.matrix = new Matrix4(baseMatrix);
+  rightEye.color = [0.0,0.0,0.0,1.0];
+  rightEye.matrix.translate(-0.2,0.255,-0.65);
+  rightEye.matrix.rotate(0,0,0,1);
+  rightEye.matrix.scale(0.05,.05,.05);
+  rightEye.textureNum = textureNum;
+  rightEye.render();
+
+  var leftEye = new Cube();
+  leftEye.matrix = new Matrix4(baseMatrix);
+  leftEye.color = [0.0,0.0,0.0,1.0];
+  leftEye.matrix.translate(0.08,0.255,-0.65);
+  leftEye.matrix.rotate(0,0,0,1);
+  leftEye.matrix.scale(0.05,.05,.05);
+  leftEye.textureNum = textureNum;
+  leftEye.render();
+
+  var leftEar = new Cube();
+  leftEar.matrix = new Matrix4(baseMatrix);
+  leftEar.color = [0.83,0.64,0.33,1.0];
+  leftEar.matrix.translate(0.15,0.4,-0.6);
+  leftEar.matrix.rotate(0,0,0,1);
+  leftEar.matrix.scale(0.18,.18,.18);
+  leftEar.textureNum = textureNum;
+  leftEar.render();
+
+  var rightEar = new Cube();
+  rightEar.matrix = new Matrix4(baseMatrix);
+  rightEar.color = [0.83,0.64,0.33,1.0];
+  rightEar.matrix.translate(-0.4,0.4,-0.6);
+  rightEar.matrix.rotate(0,0,0,1);
+  rightEar.matrix.scale(0.18,.18,.18);
+  rightEar.textureNum = textureNum;
+  rightEar.render();
+
+  var mane1 = new Cube();
+  mane1.matrix = new Matrix4(baseMatrix);
+  mane1.color = [0.59,0.29,0.0,1.0];
+  mane1.matrix.translate(-0.32,-0.1,-0.45);
+  mane1.matrix.rotate(0,0,0,1);
+  mane1.matrix.scale(0.6,.6,.3);
+  mane1.textureNum = textureNum;
+  mane1.render();
+
+
+}
+
+function drawMushroom(x,y,z,rotateY,textureNum){
+  let baseMatrix = new Matrix4();
+
+  // position
+  baseMatrix.translate(x, y, z);
+
+  // rotate which way animal faces
+  baseMatrix.rotate(rotateY, 0, 1, 0);
+
+  var head = new Cube()
+  head.matrix = new Matrix4(baseMatrix);
+  head.color = [1, 0.8, 0.72,1];
+  head.matrix.scale(0.6,0.6,0.6);
+  head.textureNum = textureNum;
+  head.render();
+
+  var cap = new Cube();
+  cap.matrix = new Matrix4(baseMatrix);
+  cap.color = [1,0,0,1];
+  cap.matrix.translate(-0.1,0.6,-0.1);
+  cap.matrix.scale(0.8,0.8,0.8);
+  cap.textureNum = textureNum;
+  cap.render();
+}
+
+let bgMusic;
+
+function initAudio() {
+  bgMusic = new Audio("Funky.m4a");
+
+  bgMusic.loop = true;     // repeat forever
+  bgMusic.volume = 0.5;    // 50% volume
+
+  // browsers usually require user interaction first
+  bgMusic.play();
 }
 
 function renderAllShapes(){
@@ -567,10 +880,6 @@ function renderAllShapes(){
   baseMatrix.rotate(g_pokeSpin, 0, 1, 0);
   let startTime = performance.now();
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  
-
-  drawTree(-5,5);
-  drawMap();
 
 
   var projMat = new Matrix4();
@@ -585,6 +894,26 @@ function renderAllShapes(){
 
   var globalRotMat = new Matrix4()
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
+
+  drawTree(-9,5);
+  drawTree(-11,-7);
+  drawTree(-13,-5);
+  drawTree(14,10);
+  drawTree(11,-4);
+  drawTree(-4,-11);
+  drawTree(8,-12);
+  drawTree(0,-2);
+  drawTree(4,3);
+  drawMap();
+  drawAnimal(12,0,5, -135, 4);
+  drawAnimal(-4,1,-12, 90, -2);
+  drawAnimal(-1,0,-3, -35, -2);
+  drawAnimal(7,0,-3, -135, -2);
+  drawAnimal(10,0,-12, -90, -2);
+  drawMushroom(12,0,-12.5,0,-2);
+  drawMushroom(-5.5,-1,3.5,0,-2);
+  drawAnimal(-2.5,0,3.75, 90, -2);
+  drawAnimal(-1.5,0,12.5,-90,0);
 
   var ground = new Cube();
   ground.matrix = new Matrix4(baseMatrix)
@@ -602,210 +931,6 @@ function renderAllShapes(){
   sky.matrix.translate(-0.5,-.5,-.5);
   sky.textureNum = -2;
   sky.render();
-  
-  var body = new Cube();
-  body.matrix = new Matrix4(baseMatrix)
-  body.color = [0.83,0.64,0.33,1.0];
-  body.matrix.translate(-.25,-.25,0.6);
-  body.matrix.rotate(-90,1,0,0);
-  body.matrix.scale(0.45,1,.45);
-  body.render();
-
-  var tail = new Cylinder(20);
-  tail.matrix = new Matrix4(baseMatrix)
-  tail.color = [0.83,0.64,0.33,1.0];
-  tail.matrix.translate(-.0,-.4,1.05);
-  tail.matrix.rotate(-45,1,0,0);
-  tail.matrix.scale(0.05,0.7,.05);
-  tail.render();
-
-  var tailEnd = new Cube();
-  tailEnd.matrix = new Matrix4(baseMatrix);
-  tailEnd.color = [0.0,0.0,0.0,1.0];
-  tailEnd.matrix.translate(-.05,-.5,1.1);
-  tailEnd.matrix.rotate(-45,1,0,0);
-  tailEnd.matrix.scale(0.1,0.1,.1);
-  tailEnd.render();
-
-  var leftShoulder = new Cube();
-  leftShoulder.matrix = new Matrix4(baseMatrix);
-  leftShoulder.color = [0.8,0.6,0.33,1.0];
-  leftShoulder.matrix.translate(0.0,-0.35,-0.46);
-  leftShoulder.matrix.rotate(g_LeftArmRotate/10,1,0,0);
-  //leftShoulder.matrix.rotate(30*Math.sin(g_seconds)/10,1,0,0);
-  leftShoulder.matrix.scale(0.23,.23,.23);
-  leftShoulder.render();
-
-  var rightShoulder = new Cube();
-  rightShoulder.matrix = new Matrix4(baseMatrix);
-  rightShoulder.color = [0.8,0.6,0.33,1.0];
-  rightShoulder.matrix.translate(-0.3,-0.35,-0.46);
-  rightShoulder.matrix.rotate(g_RightArmRotate/10,1,0,0);
-  //rightShoulder.matrix.rotate(30*Math.sin(g_seconds + Math.PI)/10,1,0,0);
-  rightShoulder.matrix.scale(0.23,.23,.23);
-  rightShoulder.render();
-
-  var leftArm = new Cube();
-  leftArm.matrix = new Matrix4(baseMatrix);
-  leftArm.color = [0.8,0.6,0.33,1.0];
-  leftArm.matrix.translate(0.0,-0.3,-0.17);
-  leftArm.matrix.rotate(g_LeftArmRotate,1,0,0);
-  //leftArm.matrix.rotate(30*Math.sin(g_seconds),1,0,0);
-  leftArm.matrix.rotate(170,-1,0,0);
-  var leftArmJoint = new Matrix4(leftArm.matrix);
-  leftArm.matrix.scale(0.23,0.55,.23);
-  leftArm.render();
-
-  var rightArm = new Cube();
-  rightArm.matrix = new Matrix4(baseMatrix);
-  rightArm.color = [0.8,0.6,0.33,1.0];
-  rightArm.matrix.translate(-0.3,-0.3,-0.17);
-  rightArm.matrix.rotate(g_RightArmRotate,1,0,0);
-  //rightArm.matrix.rotate(30*Math.sin(g_seconds + Math.PI),1,0,0);
-  rightArm.matrix.rotate(170,-1,0,0);
-  var rightArmJoint = new Matrix4(rightArm.matrix);
-  rightArm.matrix.scale(0.23,0.55,.23);
-  rightArm.render();
-
-  var leftPaw = new Cube();
-  leftPaw.color = [0.8,0.6,0.33,1.0];
-  leftPaw.matrix = new Matrix4(leftArmJoint);
-  leftPaw.matrix.translate(0.0,0.54,0.05);
-  leftPaw.matrix.rotate(g_LeftPawRotate,1,0,0);
-  //leftPaw.matrix.rotate(-10*Math.sin(g_seconds),1,0,0);
-  leftPaw.matrix.scale(0.23,0.12,0.23);
-  leftPaw.render();
-
-  var rightPaw = new Cube();
-  rightPaw.color = [0.8,0.6,0.33,1.0];
-  rightPaw.matrix = new Matrix4(rightArmJoint);
-  rightPaw.matrix.translate(0.0,0.54,0.05);
-  rightPaw.matrix.rotate(g_RightPawRotate,1,0,0);
-  //rightPaw.matrix.rotate(-10*Math.sin(g_seconds + Math.PI),1,0,0);
-  rightPaw.matrix.scale(0.23,0.12,0.23);
-  rightPaw.render();
-
-  var leftThigh = new Cube();
-  leftThigh.matrix = new Matrix4(baseMatrix);
-  leftThigh.color = [0.8,0.6,0.33,1.0];
-  leftThigh.matrix.translate(-0.03,-0.15,0.55);
-  leftThigh.matrix.rotate(g_LeftThighRotate,1,0,0);
-  //leftThigh.matrix.rotate(30*Math.sin(g_seconds -0.2),1,0,0);
-  leftThigh.matrix.rotate(200,-1,0,0);
-  var leftThighJoint = new Matrix4(leftThigh.matrix);
-  leftThigh.matrix.scale(0.26,0.402,.26);
-  leftThigh.render();
-
-  var leftLeg = new Cube();
-  leftLeg.color = [0.8,0.6,0.33,1.0];
-  leftLeg.matrix = new Matrix4(leftThighJoint);
-  leftLeg.matrix.translate(0.05,0.3,-0.0);
-  leftLeg.matrix.rotate(15,1,0,0);
-  var leftLegJoint = new Matrix4(leftLeg.matrix);
-  leftLeg.matrix.scale(0.15,0.4,0.2);
-  leftLeg.render();
-
-  var leftFoot = new Cube();
-  leftFoot.color = [0.8,0.6,0.33,1.0];
-  leftFoot.matrix = new Matrix4(leftLegJoint);
-  leftFoot.matrix.translate(-0.01,0.4,0.05);
-  leftFoot.matrix.rotate(g_LeftFootRotate,1,0,0);
-  //leftFoot.matrix.rotate(-10*Math.sin(g_seconds - 0.2),1,0,0);
-  leftFoot.matrix.scale(0.2,0.12,0.23);
-  leftFoot.render();
-  
-  var rightThigh = new Cube();
-  rightThigh.matrix = new Matrix4(baseMatrix);
-  rightThigh.color = [0.8,0.6,0.33,1.0];
-  rightThigh.matrix.translate(-0.25,-0.15,0.55);
-  rightThigh.matrix.rotate(g_RightThighRotate,1,0,0);
-  //rightThigh.matrix.rotate(30*Math.sin(g_seconds + Math.PI -0.2),1,0,0);
-  rightThigh.matrix.rotate(200,-1,0,0);
-  var rightThighJoint = new Matrix4(rightThigh.matrix);
-  rightThigh.matrix.scale(0.26,0.402,.26);
-  rightThigh.render();
-
-  var rightLeg = new Cube();
-  rightLeg.color = [0.8,0.6,0.33,1.0];
-  rightLeg.matrix = new Matrix4(rightThighJoint);
-  rightLeg.matrix.translate(0.05,0.3,-0.0);
-  rightLeg.matrix.rotate(15,1,0,0);
-  var rightLegJoint = new Matrix4(rightLeg.matrix);
-  rightLeg.matrix.scale(0.15,0.4,0.2);
-  rightLeg.render();
-
-  var rightFoot = new Cube();
-  rightFoot.color = [0.8,0.6,0.33,1.0];
-  rightFoot.matrix = new Matrix4(rightLegJoint);
-  rightFoot.matrix.translate(-0.03,0.4,0.05);
-  rightFoot.matrix.rotate(g_RightFootRotate,1,0,0);
-  //rightFoot.matrix.rotate(-10*Math.sin(g_seconds + Math.PI - 0.2),1,0,0);
-  rightFoot.matrix.scale(0.2,0.12,0.23);
-  rightFoot.render();
-
-  var head = new Cube();
-  head.matrix = new Matrix4(baseMatrix);
-  head.color = [0.83,0.64,0.33,1.0];
-  head.matrix.translate(-0.275,0.0,-0.6);
-  head.matrix.rotate(0,0,0,1);
-  head.matrix.scale(0.5,.5,.3);
-  head.render();
-
-  var snout = new Cube();
-  snout.matrix = new Matrix4(baseMatrix);
-  snout.color = [0.83,0.64,0.33,1.0];
-  snout.matrix.translate(-0.151,0.0,-0.8);
-  snout.matrix.rotate(0,0,0,1);
-  snout.matrix.scale(0.25,.25,.25);
-  snout.render();
-
-  var nose = new Cube();
-  nose.matrix = new Matrix4(baseMatrix);
-  nose.color = [0.0,0.0,0.0,1.0];
-  nose.matrix.translate(-0.076,0.2,-0.822);
-  nose.matrix.rotate(0,0,0,1);
-  nose.matrix.scale(0.1,.05,.0);
-  nose.render();
-
-  var rightEye = new Cube();
-  rightEye.matrix = new Matrix4(baseMatrix);
-  rightEye.color = [0.0,0.0,0.0,1.0];
-  rightEye.matrix.translate(-0.2,0.255,-0.65);
-  rightEye.matrix.rotate(0,0,0,1);
-  rightEye.matrix.scale(0.05,.05,.05);
-  rightEye.render();
-
-  var leftEye = new Cube();
-  leftEye.matrix = new Matrix4(baseMatrix);
-  leftEye.color = [0.0,0.0,0.0,1.0];
-  leftEye.matrix.translate(0.08,0.255,-0.65);
-  leftEye.matrix.rotate(0,0,0,1);
-  leftEye.matrix.scale(0.05,.05,.05);
-  leftEye.render();
-
-  var leftEar = new Cube();
-  leftEar.matrix = new Matrix4(baseMatrix);
-  leftEar.color = [0.83,0.64,0.33,1.0];
-  leftEar.matrix.translate(0.15,0.4,-0.6);
-  leftEar.matrix.rotate(0,0,0,1);
-  leftEar.matrix.scale(0.18,.18,.18);
-  leftEar.render();
-
-  var rightEar = new Cube();
-  rightEar.matrix = new Matrix4(baseMatrix);
-  rightEar.color = [0.83,0.64,0.33,1.0];
-  rightEar.matrix.translate(-0.4,0.4,-0.6);
-  rightEar.matrix.rotate(0,0,0,1);
-  rightEar.matrix.scale(0.18,.18,.18);
-  rightEar.render();
-
-  var mane1 = new Cube();
-  mane1.matrix = new Matrix4(baseMatrix);
-  mane1.color = [0.59,0.29,0.0,1.0];
-  mane1.matrix.translate(-0.32,-0.1,-0.45);
-  mane1.matrix.rotate(0,0,0,1);
-  mane1.matrix.scale(0.6,.6,.3);
-  mane1.render();
 
   //var len = g_points.length;
   /*var len = g_shapeList.length;

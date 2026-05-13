@@ -6,7 +6,7 @@ class Cube{
     //this.size = 5.0;
     //this.segments = 10; 
     this.matrix = new Matrix4();
-    this.textureNum = 1;
+    this.textureNum;
   }
 
   render(){
@@ -25,6 +25,10 @@ else if (this.textureNum === 1) {
 else if (this.textureNum === 2) {
   gl.activeTexture(gl.TEXTURE2);
   gl.bindTexture(gl.TEXTURE_2D, g_textures["wood"]);
+}
+else if (this.textureNum === 3) {
+  gl.activeTexture(gl.TEXTURE3);
+  gl.bindTexture(gl.TEXTURE_2D, g_textures["wall"]);
 }
     gl.uniform1i(u_whichTexture, this.textureNum);
     // Pass the color of a point to u_FragColor variable
