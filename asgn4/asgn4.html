@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Lighting</title>
+  </head>
+
+  <body onload="main()">
+    <canvas id="webgl" width="900" height="900">
+    Please use a browser that supports "canvas"
+    </canvas>
+    <!--<button type = 'button' id = 'red'>Red</button>
+    <button type = 'button' id = 'green'>Green</button>-->
+
+    <!--<br><br>
+    <button type="button" id="pointButton">Point</button>
+    <button type="button" id="triangleButton">Triangle</button>
+    <button type="button" id="circleButton">Circle</button>
+
+    <br><br>
+    <button type="button" style=" background-color: red; color: white" id="snapButton">Snap</button>
+    <button type="button" id="eraseButton">Erase</button>
+
+    <br><br>
+    Red <input type="range" min='0' max='100' value='100' class='slider' id="redSlide">
+    <br><br>
+    Green <input type="range" min='0' max='100' value='100' class='slider' id="greenSlide">
+    <br><br>
+    Blue <input type="range" min='0' max='100' value='100' class='slider' id="blueSlide">-->
+    <div id="fps"></div>  Use wasd to move, the mouse to rotate, f to place blocks, g to delete. Turn your audio on, there's music when you start moving. Something weird happens when you shift click.
+    <br><br>
+    <button type="button" id="normalOn">NORMALON</button>
+    <button type="button" id="normalOff">NORMALOFF</button>
+    <br><br>
+    Animation:
+    <button type="button" id="animationOn">ON</button>
+    <button type="button" id="animationOff">OFF</button>
+    <br><br>
+    Left Arm: <input type="range" min="-45.0" max="45.0" value="0.0" class="slider" id="leftArmSlide">
+    Right Arm: <input type="range" min="-45.0" max="45.0" value="0.0" class="slider" id="rightArmSlide">
+
+    <br><br>
+    Left Paw: <input type="range" min='-10' max='7' value='-3.5' class='slider' id="leftPawSlide">
+    Right Paw: <input type="range" min='-10' max='7' value='-3.5' class='slider' id="rightPawSlide">
+
+    <br><br>
+    Left Thigh: <input type="range" min='-45.0' max='45.0' value='0' class='slider' id="leftThighSlide">
+    Right Thigh: <input type="range" min='-45.0' max='45.0' value='0' class='slider' id="rightThighSlide">
+
+    <br><br>
+    Left Foot: <input type="range" min='-10.0' max='7.0' value='0' class='slider' id="leftFootSlide">
+    Right Foot: <input type="range" min='-10.0' max='7.0' value='0' class='slider' id="rightFootSlide">
+
+    <br><br>
+    Camera Angle <input type="range" min='0' max='90' value='5' class='slider' id="angleSlide">
+    
+
+
+    <script src="lib/webgl-utils.js"></script>
+    <script src="lib/webgl-debug.js"></script>
+    <script src="lib/cuon-utils.js"></script>
+    <script src="lib/cuon-matrix-cse160.js"></script>
+    <script src="Triangle.js"></script>
+    <script src="Circle.js"></script>
+    <script src="Cube.js"></script>
+    <script src="Camera.js"></script>
+    <script src="Lighting.js"></script>
+  </body>
+</html>
